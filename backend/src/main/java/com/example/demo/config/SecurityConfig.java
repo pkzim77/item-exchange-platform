@@ -27,9 +27,10 @@ public class SecurityConfig {
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/api/usuarios", "/api/auth/login").permitAll()
+                .requestMatchers("/api/itens", "/api/itens/**").permitAll() 
                 .anyRequest().authenticated()
             );
         return http.build();
     }
-
+	
 }

@@ -1,11 +1,17 @@
 package com.example.demo.model;
 
+import java.util.List;
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -26,6 +32,10 @@ public class Usuario {
 	@Column(nullable = false)
 	private String senha;
 	private Double notaAvaliacao;
+	
+	@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+	 @JsonIgnoreProperties("usuario") 
+	private List<Item> itens;
 	
 	public Usuario() {
 		
@@ -98,7 +108,15 @@ public class Usuario {
 	public void setNotaAvaliacao(Double notaAvaliacao) {
 		this.notaAvaliacao = notaAvaliacao;
 	}
+	
+	public List<Item> getItens() {
+	    return itens;
+	}
 
+	public void setItens(List<Item> itens) {
+	    this.itens = itens;
+	}
+	
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
@@ -115,7 +133,4 @@ public class Usuario {
 		Usuario other = (Usuario) obj;
 		return Objects.equals(id, other.id);
 	}
-	
-	
-
 }

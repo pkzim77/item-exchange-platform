@@ -9,6 +9,6 @@ import com.example.demo.model.Item;
 @Repository
 public interface ItemRepository extends JpaRepository<Item, Long> {
 	
-	    List<Item> findByCategoria(String categoria);
+	List<Item> findByCategoriaContainingIgnoreCase(String categoria);
 
 }

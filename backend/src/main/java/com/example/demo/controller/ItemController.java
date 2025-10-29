@@ -1,5 +1,7 @@
 package com.example.demo.controller;
-
+import org.springframework.web.bind.annotation.DeleteMapping; 
+import org.springframework.web.bind.annotation.PutMapping; 
+import org.springframework.web.server.ResponseStatusException; 
 import java.util.List;
 import java.util.Optional;
 
@@ -12,8 +14,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.example.demo.model.Item;
 import com.example.demo.service.ItemService;
 
@@ -48,4 +50,41 @@ public class ItemController {
             return ResponseEntity.notFound().build();
         }
     }
+    
+    @GetMapping("/search")
+    public ResponseEntity<List<Item>> buscarPorCategoria(
+        @RequestParam String categoria) {
+        
+        List<Item> itens = itemService.buscarPorCategoria(categoria);
+        
+        if (itens.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        
+        return ResponseEntity.ok(itens);
+    }
+    
+    @PutMapping("/{id}")
+    public ResponseEntity<Item> atualizarItem(@PathVariable Long id, @RequestBody Item item) {
+    	try {
+    		Item itemAtualizado = itemService.atualizarItem(id, item);
+    		return ResponseEntity.ok(itemAtualizado);} 
+    	catch (ResponseStatusException e) {
+    		return new ResponseEntity<>(e.getStatusCode());
+    	}
+    }
+    
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletarItem(@PathVariable Long id) {
+    	try {
+            itemService.deletarItem(id);
+            return ResponseEntity.noContent().build();} 
+    	catch (ResponseStatusException e) {
+        	return new ResponseEntity<>(e.getStatusCode());
+        }
+    }
+    
 }
+    
+    
+

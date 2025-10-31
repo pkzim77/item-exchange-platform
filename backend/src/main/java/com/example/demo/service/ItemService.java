@@ -4,13 +4,17 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.example.demo.config.UsuarioDetails;
 import com.example.demo.model.Item;
 import com.example.demo.model.Usuario;
 import com.example.demo.repository.ItemRepository;
 import com.example.demo.repository.UsuarioRepository;
+import org.springframework.data.domain.Page; 
+import org.springframework.data.domain.Pageable;
 
 @Service
 public class ItemService {
@@ -34,8 +38,8 @@ public class ItemService {
     }
 
     // Método de Listagem Geral (GET)
-    public List<Item> findAll() {
-        return itemRepository.findAll();
+    public Page<Item> findAll(Pageable pageable) {
+        return itemRepository.findAll(pageable); 
     }
     
     // Método de Busca por ID (GET /id)
@@ -51,13 +55,31 @@ public class ItemService {
                 "Item não encontrado para o ID: " + id
             );
         }
+    	Item item = itemRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Item não encontrado"));
+
+        UsuarioDetails usuarioLogado = (UsuarioDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Long usuarioLogadoId = usuarioLogado.getUsuario().getId();
+
+        if (!item.getUsuario().getId().equals(usuarioLogadoId)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Você não tem permissão para deletar este item.");
+        }
+
         itemRepository.deleteById(id);
     }
     
     // MÉTODO DE ATUALIZAÇÃO (PUT)
     public Item atualizarItem(Long id, Item itemAtualizado) {
+    	
+    	
         return itemRepository.findById(id).map(itemExistente -> {
+        	 UsuarioDetails usuarioLogado = (UsuarioDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            Long usuarioLogadoId = usuarioLogado.getUsuario().getId();
             Long novoUsuarioId = itemAtualizado.getUsuario().getId();
+            
+           if (!itemExistente.getUsuario().getId().equals(usuarioLogadoId)) {
+              throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Você não tem permissão para editar este item.");
+            }
             
             // Lógica para mudar o usuário (se for o caso)
             if (novoUsuarioId != null && !novoUsuarioId.equals(itemExistente.getUsuario().getId())) {

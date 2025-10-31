@@ -4,7 +4,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.server.ResponseStatusException; 
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.model.Item;
 import com.example.demo.service.ItemService;
-
+import org.springframework.data.domain.Page; 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 @RestController
 @RequestMapping("/api/itens") 
 @CrossOrigin(origins = "http://localhost:3000")
@@ -34,10 +35,17 @@ public class ItemController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Item>> getAllItens() {
-        List<Item> itens = itemService.findAll();
-        return ResponseEntity.ok(itens);
-    }
+    public ResponseEntity<Page<Item>> getAllItens(
+            @PageableDefault(size = 10, page = 0) Pageable pageable) {
+            
+            Page<Item> itensPage = itemService.findAll(pageable);
+            
+            if (itensPage.isEmpty()) {
+                return ResponseEntity.noContent().build();
+            }
+            
+            return ResponseEntity.ok(itensPage);
+        }
 
     @GetMapping("/{id}")
     public ResponseEntity<Item> getItemById(@PathVariable Long id) {

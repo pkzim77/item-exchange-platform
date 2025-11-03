@@ -3,8 +3,8 @@ package com.example.demo.service;
 import org.springframework.stereotype.Service;
 import com.example.demo.model.Usuario;
 import com.example.demo.repository.UsuarioRepository;
-import java.util.Optional;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import java.util.Optional;
 
 @Service
 public class UsuarioService {
@@ -27,14 +27,13 @@ public class UsuarioService {
         return usuarioRepository.save(usuario);
 	}
 	
-	//metodo auxiliar para login
 	public Optional<Usuario> buscarPorEmail(String email) {
-        return usuarioRepository.findByEmail(email);
-    }
-	
+		return usuarioRepository.findByEmail(email);
+	}
+
 	public Usuario autenticar(String email, String senha) {
 		Usuario usuario = usuarioRepository.findByEmail(email)
-		.orElseThrow(()-> new RuntimeException("credenciais invalidas."));
+		.orElseThrow(()-> new RuntimeException("Credenciais inválidas."));
 		
 		if(!passwordEncoder.matches(senha, usuario.getSenha())) {
 			throw new RuntimeException("Credenciais inválidas.");

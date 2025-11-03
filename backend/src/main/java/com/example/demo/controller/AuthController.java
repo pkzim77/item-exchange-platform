@@ -8,16 +8,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.LoginRequest;
+import com.example.demo.dto.TokenResponse; 
 import com.example.demo.model.Usuario;
+import com.example.demo.segurity.JwtService;
 import com.example.demo.service.UsuarioService;
 
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
-	private final UsuarioService usuarioService;
 	
-	public AuthController(UsuarioService usuarioService) {
+	private final UsuarioService usuarioService;
+	private final JwtService jwtService; 
+
+	public AuthController(UsuarioService usuarioService, JwtService jwtService) { 
 		this.usuarioService = usuarioService;
+		this.jwtService = jwtService; 
 	}
 	
 	@PostMapping("/login")
@@ -26,9 +31,22 @@ public class AuthController {
 			Usuario usuarioAutenticado = usuarioService.autenticar(
 					credenciais.getEmail(),
 					credenciais.getSenha());
-		return ResponseEntity.ok("login bem sucedido para: " + usuarioAutenticado.getNome());			
+			
+
+						String token = jwtService.generateToken(usuarioAutenticado);
+			
+			// 💡 RETORNA O TOKEN ENCAPSULADO NO DTO DE RESPOSTA
+			TokenResponse response = new TokenResponse(
+					token, 
+					"Bearer", 
+					usuarioAutenticado.getNome(),
+					usuarioAutenticado.getEmail());
+			
+			return ResponseEntity.ok(response);	
+			
 		} catch (RuntimeException e) {
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED); 
 		}
 	}
 }

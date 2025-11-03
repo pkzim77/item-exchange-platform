@@ -1,0 +1,68 @@
+[
+  {
+    "id": 1,
+    "title": "Bicicleta Mountain Bike",
+    "category": "Esportes",
+    "description": "Bicicleta em ótimo estado, apenas 6 meses de uso",
+    "location": "São Paulo, SP",
+    "advertiser": "João Silva",
+    "phone": "(11) 98765-4321",
+    "rating": 4.8,
+    "image": "https://images.unsplash.com/photo-1576435728678-68d0fbf94e91?w=400&h=300&fit=crop"
+  },
+  {
+    "id": 2,
+    "title": "Livros de Programação",
+    "category": "Livros",
+    "description": "Coleção de livros técnicos sobre desenvolvimento web",
+    "location": "Rio de Janeiro, RJ",
+    "advertiser": "Maria Santos",
+    "phone": "(21) 97654-3210",
+    "rating": 5.0,
+    "image": "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400&h=300&fit=crop"
+  },
+  {
+    "id": 3,
+    "title": "Notebook Dell i5",
+    "category": "Eletrônicos",
+    "description": "Notebook Dell com processador i5, 8GB RAM, SSD 256GB",
+    "location": "Belo Horizonte, MG",
+    "advertiser": "Carlos Oliveira",
+    "phone": "(31) 96543-2109",
+    "rating": 4.5,
+    "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=400&h=300&fit=crop"
+  },
+  {
+    "id": 4,
+    "title": "Mesa de Escritório",
+    "category": "Móveis",
+    "description": "Mesa de escritório em madeira maciça, 1,20m x 0,60m",
+    "location": "Curitiba, PR",
+    "advertiser": "Ana Costa",
+    "phone": "(41) 95432-1098",
+    "rating": 4.9,
+    "image": "https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?w=400&h=300&fit=crop"
+  },
+  {
+    "id": 5,
+    "title": "Violão Tagima",
+    "category": "Instrumentos",
+    "description": "Violão acústico Tagima, perfeito para iniciantes",
+    "location": "Porto Alegre, RS",
+    "advertiser": "Pedro Alves",
+    "phone": "(51) 94321-0987",
+    "rating": 4.6,
+    "image": "https://images.unsplash.com/photo-1510915361894-db8b60106cb1?w=400&h=300&fit=crop"
+  },
+  {
+    "id": 6,
+    "title": "Roupas Infantis",
+    "category": "Roupas",
+    "description": "Lote de roupas infantis tamanho 2-4 anos",
+    "location": "Brasília, DF",
+    "advertiser": "Juliana Lima",
+    "phone": "(61) 93210-9876",
+    "rating": 4.7,
+    "image": "https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?w=400&h=300&fit=crop"
+  }
+]

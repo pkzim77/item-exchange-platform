@@ -20,41 +20,65 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Entity
 @Table (name = "tb_usuario")
 public class Usuario implements UserDetails {
-	
+
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
 	@Column(nullable = false)
 	private String nome;
+	
 	@Column(nullable = false)
 	private String telefone;
+	
 	@Column(nullable = false)
-	private String endereco;
+	private String logradouro; 
+    
+	@Column(nullable = false)
+	private String bairro; 
+    
+	@Column(nullable = false)
+	private String cidade; 
+    
+	@Column(nullable = false)
+	private String cep;
+	// ------------------------------------------
+	
 	@Column(nullable = false, unique = true)
 	private String email;
+	
 	@Column(nullable = false)
 	private String senha;
-	private Double notaAvaliacao;
+	
+	@Column(name = "nota_avaliacao", nullable = false)
+	private Double notaAvaliacao = 0.0;
 	
 	@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
-	 @JsonIgnoreProperties("usuario") 
+	@JsonIgnoreProperties("usuario")	
 	private List<Item> itens;
 	
 	public Usuario() {
 		
 	}
 
-	public Usuario(Long id, String nome, String telefone, String endereco, String email, String senha,
+	public Usuario(Long id, String nome, String telefone, String logradouro, String bairro, String cidade, String cep, String email, String senha,
 			Double notaAvaliacao) {
 		super();
 		this.id = id;
 		this.nome = nome;
 		this.telefone = telefone;
-		this.endereco = endereco;
+		this.logradouro = logradouro;
+		this.bairro = bairro;
+		this.cidade = cidade;
+		this.cep = cep;
 		this.email = email;
 		this.senha = senha;
 		this.notaAvaliacao = notaAvaliacao;
 	}
+    
+    // --- GETTERS E SETTERS ---
 
 	public Long getId() {
 		return id;
@@ -80,14 +104,40 @@ public class Usuario implements UserDetails {
 		this.telefone = telefone;
 	}
 
-	public String getEndereco() {
-		return endereco;
+	// GETTERS E SETTERS NOVOS
+	public String getLogradouro() {
+		return logradouro;
 	}
 
-	public void setEndereco(String endereco) {
-		this.endereco = endereco;
+	public void setLogradouro(String logradouro) {
+		this.logradouro = logradouro;
 	}
 
+	public String getBairro() {
+		return bairro;
+	}
+
+	public void setBairro(String bairro) {
+		this.bairro = bairro;
+	}
+
+	public String getCidade() {
+		return cidade;
+	}
+
+	public void setCidade(String cidade) {
+		this.cidade = cidade;
+	}
+
+	public String getCep() {
+		return cep;
+	}
+
+	public void setCep(String cep) {
+		this.cep = cep;
+	}
+	// FIM DOS NOVOS GETTERS E SETTERS
+    
 	public String getEmail() {
 		return email;
 	}
@@ -112,12 +162,14 @@ public class Usuario implements UserDetails {
 		this.notaAvaliacao = notaAvaliacao;
 	}
 	
+	
+	
 	public List<Item> getItens() {
-	    return itens;
+	 return itens;
 	}
 
 	public void setItens(List<Item> itens) {
-	    this.itens = itens;
+	this.itens = itens;
 	}
 	
 	@Override
@@ -136,38 +188,33 @@ public class Usuario implements UserDetails {
 		Usuario other = (Usuario) obj;
 		return Objects.equals(id, other.id);
 	}
+	
 	@Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
-    }
-    
-    @Override
-    public String getPassword() {
-
-        return this.senha;
-    }
-
-    @Override
-    public String getUsername() {
-        return this.email;
-    }
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+	}
+	@Override
+	public String getPassword() {
+		return this.senha;
+	}
+	@Override
+	public String getUsername() {
+		return this.email;
+	}
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
+	}
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
+	@Override
+	public boolean isEnabled() {
+		return true;
+	}
 }

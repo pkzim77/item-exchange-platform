@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import HomePage from '../pages/homePage';
+import RegisterScreen from '../pages/registerScreen';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ export default function AppRoutes() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<App />} />
+        <Route path="/registerScreen" element={<RegisterScreen />} />
       </Routes>
     </BrowserRouter>
   );

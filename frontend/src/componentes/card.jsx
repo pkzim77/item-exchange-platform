@@ -17,6 +17,22 @@ function CardHeader({ children, className, ...props }) {
     )
 }
 
+function CardTitle({ children, className, ...props }) {
+    return (
+        <h3 className={`card-title ${className || ''}`} {...props}>
+            {children}
+        </h3>
+    )
+}
+
+function CardDescription({ children, className, ...props }) {
+    return (
+        <p className={`card-description ${className || ''}`} {...props}>
+            {children}
+        </p>
+    )
+}
+
 function CardContent({ children, ...props }) {
     return (
         <div className="card-content" {...props}>
@@ -36,6 +52,8 @@ function CardFooter({ children, ...props }) {
 export {
     Card,
     CardHeader,
+    CardTitle,
+    CardDescription,
     CardFooter,
     CardContent,
 };

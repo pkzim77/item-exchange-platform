@@ -1,5 +1,6 @@
 import '../css/navBar.css'
 import logo from '../assets/iconLogo.png'
+import {Link} from 'react-router-dom';
 
 function Navbar(){
     return (
@@ -20,8 +21,8 @@ function Navbar(){
 
         {/* Links de navegação a direita */}
         <div className="navbar-links-right">
-          <a href="#" className="nav-link">Registre-se</a>
-          <a href="#" className="nav-link">Faça Login</a>
+          <Link to="/register" className="nav-link">Registre-se</Link>
+          <Link to="/login" className="nav-link">Faça Login</Link>
         </div>
 
       </div>

@@ -1,0 +1,96 @@
+.body-registerScreen {
+    background-color: #E8F5E9;
+}
+
+.main-registerScreen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.card {
+    width: 100%;
+    max-width: 28rem;
+}
+
+.card-header2 {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 1rem;
+    align-items: center;
+}
+
+.margin0{
+    margin: 0;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.space-y-4 {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    /* 16px */
+}
+
+.space-y-2 {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    /* 8px */
+}
+
+.pl-10 {
+    padding-left: 2.5rem;
+    /* 40px */
+}
+
+.relative {
+    position: relative;
+    width: 100%;
+}
+
+.icon-input {
+    position: absolute;
+    left: 0.75rem;
+    top: 0.75rem;
+    height: 1rem;
+    width: 1rem;
+    color: #9ca3af;
+}
+
+.w-full{
+    width: 100%;
+}
+.card-footer2 {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem; 
+  padding: 1rem;
+  align-items: center;
+}
+
+.px-1 {
+  padding-left: 0.25rem;  
+  padding-right: 0.25rem; 
+}
+
+.toggle-password {
+  position: absolute;
+  right: 0.75rem;       
+  top: 15%;              
+  color: #6b7280;        
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.toggle-password:hover {
+  color: #374151;        /* Cinza mais escuro no hover */
+}

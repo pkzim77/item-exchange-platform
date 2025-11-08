@@ -27,7 +27,7 @@ body {
   padding: 1.5rem 1rem;
 }
 
-main {
+.main-homePage {
   max-width: 80rem;
   margin-left: auto;
   margin-right: auto;
@@ -71,6 +71,7 @@ main {
 .card-footer {
   padding: 1rem; 
   padding-top: 0; 
+  align-items: start;
 }
 
 .height-6 {

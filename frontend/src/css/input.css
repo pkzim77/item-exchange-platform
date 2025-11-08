@@ -1,0 +1,72 @@
+.input {
+  /* Layout e dimensões */
+  display: flex;
+  height: 2.25rem; /* 36px */
+  width: 100%;
+  min-width: 0;
+  border-radius: 0.375rem; /* 6px */
+  
+  /* Espaçamento */
+  padding: 0.25rem 0.75rem;
+  padding-left: 2.5rem;
+  
+  /* Texto */
+  font-size: 1rem; /* 16px */
+  
+  /* Borda e fundo */
+  border: 1px solid #d1d5db; 
+  background-color: #E8F5E9;
+  
+  /* Transições */
+  transition-property: color, box-shadow;
+  outline: none;
+}
+
+/* Placeholder */
+.input::placeholder {
+  color: #9ca3af;
+}
+
+/* Seleção de texto */
+.input::selection {
+  background-color: #f63bb8; 
+  color: #ffffff; 
+}
+
+/* Focus */
+.input:focus-visible {
+ border-color: #3b82f6; 
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5); 
+}
+
+/* Estado inválido */
+.input[aria-invalid="true"] {
+  border-color: #ef4444; 
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2); 
+}
+
+/* Disabled */
+.input:disabled {
+  pointer-events: none;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Input tipo file */
+.input::file-selector-button {
+  display: inline-flex;
+  height: 1.75rem; /* 28px */
+  border: 0;
+  background-color: transparent;
+  font-size: 0.875rem; /* 14px */
+  font-weight: 500;
+  color: #1f2937;
+}
+
+/* Media query para telas médias e maiores */
+@media (min-width: 768px) {
+  .input {
+    font-size: 0.875rem; /* 14px */
+  }
+}
+

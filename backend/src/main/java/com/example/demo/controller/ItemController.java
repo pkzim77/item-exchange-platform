@@ -22,7 +22,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 @RestController
 @RequestMapping("/api/itens") 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:5173")
 public class ItemController {
 	
 	@Autowired

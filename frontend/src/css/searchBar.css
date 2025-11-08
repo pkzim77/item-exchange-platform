@@ -1,0 +1,49 @@
+.flex {
+    display: flex;
+}
+
+.gap-2 {
+    gap: 8px;
+}
+
+.relative {
+    position: relative;
+}
+
+.flex-1 {
+    display: flex;
+    flex: 1 1 0%;
+}
+
+.iconSearch {
+    position: absolute;
+    left: 0.75rem;
+    top: 0.75rem;
+    height: 1rem;
+    width: 1rem;
+    color: rgb(156 163 175);
+}
+.pl-10{
+    padding-left: 2.5rem;
+}
+
+select {
+  /* Layout */
+  display: flex;
+  align-items: center;
+  
+  /* Dimensões */
+  width: 11.25rem;
+  height: 2.25rem; /* 36px - tamanho padrão */
+  padding: 0.5rem 0.75rem; /* 8px 12px */
+  
+  /* Borda e fundo */
+  border: 1px solid #e5e7eb; /* --input */
+  border-radius: 0.375rem; /* 6px */
+  background-color: #E8F5E9; /* --input-background */
+  
+  /* Texto */
+  font-size: 0.875rem; /* 14px */
+  color: #1f2937;
+  white-space: nowrap;
+}

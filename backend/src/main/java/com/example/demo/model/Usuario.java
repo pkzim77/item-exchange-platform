@@ -55,8 +55,8 @@ public class Usuario implements UserDetails {
 	@Column(name = "nota_avaliacao", nullable = false)
 	private Double notaAvaliacao = 0.0;
 	
-	@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
-	@JsonIgnoreProperties("usuario")	
+	@OneToMany(mappedBy = "proprietario", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonIgnoreProperties("proprietario")
 	private List<Item> itens;
 	
 	public Usuario() {

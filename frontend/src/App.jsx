@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import HomePage from './pages/homePage';
 import RegisterScreen from './pages/registerScreen';
 import LoginScreen from './pages/loginScreen';
+import CreateAdvertisementScreen from './pages/createAdvertisementScreen'
 import './App.css'
 
 
@@ -12,6 +13,7 @@ export default function AppRoutes() {
         <Route path="/" element={<HomePage />} />
         <Route path="/register" element={<RegisterScreen />} />
         <Route path="/login" element={<LoginScreen />} />
+        <Route path="/createAdvertisement" element={<CreateAdvertisementScreen />} />
       </Routes>
     </BrowserRouter>
   );

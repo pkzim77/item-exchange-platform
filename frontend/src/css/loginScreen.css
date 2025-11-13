@@ -1,0 +1,76 @@
+.body-loginScreen {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #E8F5E9;
+}
+
+.main-loginScreen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.card-loginScreen {
+    width: 100%;
+    max-width: 28rem;
+}
+
+.cardHeader-loginScreen {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    text-align: center;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.space-y-2 {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.icon-input {
+    position: absolute;
+    left: 0.75rem;
+    top: 0.75rem;
+    height: 1rem;
+    width: 1rem;
+    color: #9ca3af;
+}
+
+.flex {
+    display: flex;
+}
+
+.justify-end {
+    justify-content: flex-end;
+}
+
+.px-0 {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.w-full {
+    width: 100%;
+}
+
+.cardFooter-loginScreen {
+    display: flex;
+    flex-direction: column;
+    margin-top: 0.5rem;
+}
+
+.text-sm {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+}
+
+.text-gray-600{
+    color: rgb(75 85 99);
+}

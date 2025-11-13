@@ -14,6 +14,7 @@ export default function AppRoutes() {
       <Routes>
         <Route path="/" element={<App />} />
         <Route path="/registerScreen" element={<RegisterScreen />} />
+        <Route path="/loginScreen" element={<RegisterScreen />} />
       </Routes>
     </BrowserRouter>
   );

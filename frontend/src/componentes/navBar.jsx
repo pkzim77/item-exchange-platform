@@ -1,5 +1,6 @@
 import '../css/navBar.css'
 import logo from '../assets/iconLogo.png'
+import {Link} from 'react-router-dom';
 
 function Navbar(){
     return (
@@ -14,14 +15,14 @@ function Navbar(){
         {/* Links de navegação central */}
         <div className="navbar-links-center">
           <a href="#" className="nav-link">Negociações</a>
-          <a href="#" className="nav-link">Criar um anuncio</a>
+          <Link className='nav-link' to="/createAdvertisement">Criar um anuncio</Link>
           <a href="#" className="nav-link">Chat</a>
         </div>
 
         {/* Links de navegação a direita */}
         <div className="navbar-links-right">
-          <a href="#" className="nav-link">Registre-se</a>
-          <a href="#" className="nav-link">Faça Login</a>
+          <Link to="/register" className="nav-link">Registre-se</Link>
+          <Link to="/login" className="nav-link">Faça Login</Link>
         </div>
 
       </div>

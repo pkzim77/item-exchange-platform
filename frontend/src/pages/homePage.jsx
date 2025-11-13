@@ -58,7 +58,7 @@ export default function HomePage() {
         </div>
 
       </header>
-      <main>
+      <main className="main-homePage">
         {loadingItens ? (
           <h1>Carregando anúncios</h1>
         ) : itens.length === 0 ? (
@@ -70,7 +70,7 @@ export default function HomePage() {
           <div className="container-grid">
             {itens.map((element) => (
               <Card key={element.id}>
-                <CardHeader className="padding-0">
+                <CardHeader>
                   <img
                     src={element.fotoUrl}
                     alt={element.nome}

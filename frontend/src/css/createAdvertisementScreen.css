@@ -1,0 +1,116 @@
+.body-createAdvertisementScreen {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #E8F5E9;
+}
+
+.main-createAdvertisementScreen {
+    width: 100%;
+    align-items: center;
+}
+
+.center{
+    max-width: 56rem;   /* mas não passa de 56rem */    /* centraliza horizontalmente */
+    padding: 1.5rem 1rem;
+    width: 100%;  
+    margin: 0 auto;
+}
+
+.form-createAdvertisementScreen>*+* {
+    margin-top: 1.5rem;
+}
+
+.form-createAdvertisementScreen .space-y-2>*+* {
+    margin-top: 0.5rem;
+}
+
+.photo-upload-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+.relative {
+    position: relative;
+}
+
+.item-preview {
+    width: 100%;
+    height: 8rem;
+    object-fit: cover;
+    border-radius: 0.5rem;
+}
+
+
+.remove-photo-btn {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    height: 1.5rem;
+    width: 1.5rem;
+}
+
+.h-4 {
+    height: 1rem;
+}
+
+.w-4 {
+    width: 1rem;
+}
+
+.upload-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 8rem;
+    border: 2px dashed #d1d5db;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+}
+
+.upload-area:hover {
+    border-color: #9ca3af;
+}
+
+.text-sm {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+}
+
+.text-gray-600 {
+    color: #6b7280;
+}
+.hidden{
+    display: none;
+}
+.space-y-2{
+    margin-top: 0.5rem;
+}
+.flex{
+    display: flex;
+}
+.gap-3{
+    gap: 0.75rem
+}
+.flex-1{
+    flex: 1 1 0%;
+}
+
+.card-createAdvertisementScreen {
+    width: 100%;
+    max-width: 56rem;
+    padding-bottom: 1.5rem;
+}
+
+.pl-8 {
+  padding-left: 0.5rem
+}
+.cardHeader-createAdvertisementScreen{
+    padding: 0 1.5rem;
+}
+.select-createAdvertisementScreen{
+    width: 100%;
+}

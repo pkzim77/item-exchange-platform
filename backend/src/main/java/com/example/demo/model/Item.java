@@ -19,91 +19,75 @@ import jakarta.persistence.Table;
 public class Item {
 	
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Column(nullable = false, length = 100)
-    private String nome;
-    @Column(nullable = false, columnDefinition = "TEXT")
-    private String descricao;
-    @Column(nullable = false, length = 50)
-    private String categoria;
-    @Column(name = "foto_url")
-    private String fotoUrl; 
+ 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+ 	private Long id;
+ 	@Column(nullable = false, length = 100)
+ 	private String nome;
+ 	@Column(nullable = false, columnDefinition = "TEXT")
+ 	private String descricao;
+ 	@Column(nullable = false, length = 50)
+ 	private String categoria;
+ 	@Column(name = "foto_url")
+ 	private String fotoUrl;	
+ 	@Column(nullable = false)
+ 	private String endereco;	
+ 	
+ 	@ManyToOne(fetch = FetchType.EAGER)
+ 	@JoinColumn(name = "usuario_id", nullable = false)
+ 	@JsonIgnoreProperties("itens")
+ 	private Usuario proprietario;
+ 	
     @Column(nullable = false)
-    private String endereco; 
-    
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "usuario_id", nullable = false)
-    @JsonIgnoreProperties("itens")
-    private Usuario usuario; 
-    @Column(name = "data_criacao", nullable = false, updatable = false)
-    private LocalDateTime dataCriacao;
-    
-    public Item() {
-        this.dataCriacao = LocalDateTime.now();
-    }
+    private boolean disponivel = true; 
+ 	
+ 	@Column(name = "data_criacao", nullable = false, updatable = false)
+ 	private LocalDateTime dataCriacao;
+ 	
+ 	public Item() {
+ 		this.dataCriacao = LocalDateTime.now();
+ 	}
 
-	public Long getId() {
-		return id;
-	}
+    // --- GETTERS E SETTERS ---
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+	public Long getId() { return id; }
+	public void setId(Long id) { this.id = id; }
 
-	public String getNome() {
-		return nome;
-	}
+	public String getNome() { return nome; }
+	public void setNome(String nome) { this.nome = nome; }
 
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
+	public String getDescricao() { return descricao; }
+	public void setDescricao(String descricao) { this.descricao = descricao; }
 
-	public String getDescricao() {
-		return descricao;
-	}
+	public String getCategoria() { return categoria; }
+	public void setCategoria(String categoria) { this.categoria = categoria; }
 
-	public void setDescricao(String descricao) {
-		this.descricao = descricao;
-	}
+	public String getFotoUrl() { return fotoUrl; }
+	public void setFotoUrl(String fotoUrl) { this.fotoUrl = fotoUrl; }
 
-	public String getCategoria() {
-		return categoria;
-	}
+	public String getEndereco() { return endereco; }
+	public void setEndereco(String endereco) { this.endereco = endereco; }
 
-	public void setCategoria(String categoria) {
-		this.categoria = categoria;
-	}
-
-	public String getFotoUrl() {
-		return fotoUrl;
-	}
-
-	public void setFotoUrl(String fotoUrl) {
-		this.fotoUrl = fotoUrl;
-	}
-
-	public String getEndereco() {
-		return endereco;
-	}
-
-	public void setEndereco(String endereco) {
-		this.endereco = endereco;
-	}
-
-	public Usuario getUsuario() {
-		return usuario;
+	public Usuario getProprietario() { // Usado no NegociacaoService
+		return proprietario;
 	}
 
 	public void setUsuario(Usuario usuario) {
-		this.usuario = usuario;
+		this.proprietario = usuario;
 	}
 
+    public boolean isDisponivel() {
+        return disponivel;
+    }
+
+    public void setDisponivel(boolean disponivel) { 
+        this.disponivel = disponivel;
+    }
+    
 	public LocalDateTime getDataCriacao() {
 		return dataCriacao;
 	}
 
 	public void setDataCriacao(LocalDateTime dataCriacao) {
 		this.dataCriacao = dataCriacao;
-	} 
+	}	
 }

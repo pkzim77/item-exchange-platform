@@ -286,7 +286,7 @@ export default function RegisterScreen() {
                     <CardFooter className='card-footer2'>
                         <div>
                             Já tem uma conta?{''}
-                            <Link to='/'><Button variant="link" className="px-1">Fazer login</Button></Link>
+                            <Link to='/login'><Button variant="link" className="px-1">Fazer login</Button></Link>
                         </div>
                     </CardFooter>
                 </Card>

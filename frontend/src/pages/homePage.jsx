@@ -15,10 +15,14 @@ export default function HomePage() {
   useEffect(() => {
     async function chamaItens() {
       try {
-        const response = await axios.get("http://localhost:8080/api/itens");
+        const token = localStorage.getItem("token");
+        const response = await axios.get("http://localhost:8080/api/itens", {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
         const data = response.data.content;
-        console.log(data)
-
+        
         // 🔍 Aplica filtros combinados (categoria + termo)
         const filtered = data.filter((item) => {
           // verifica se a categoria bate ou se não há filtro
@@ -84,18 +88,18 @@ export default function HomePage() {
                   <p className="card-content-p">{element.descricao}</p>
                   <div className="card-user-info">
                     <Avatar className="height-6 width-6">
-                      <AvatarFallback>{element.usuario.nome[0]}</AvatarFallback>
+                      <AvatarFallback>{element.proprietario.nome[0]}</AvatarFallback>
                     </Avatar>
-                    <span className="text-sm">{element.usuario.nome}</span>
-                    <span className="text-sm rating">{element.usuario.notaAvaliacao
-                      ? `★ ${element.usuario.notaAvaliacao.toFixed(1)}`
+                    <span className="text-sm">{element.proprietario.nome}</span>
+                    <span className="text-sm rating">{element.proprietario.notaAvaliacao
+                      ? `★ ${element.proprietario.notaAvaliacao.toFixed(1)}`
                       : "Sem avaliação"}
                     </span>
                   </div>
                   <p className="text-sm text-gray-500">{element.endereco}</p>
                 </CardContent>
                 <CardFooter className="card-footer">
-                  <p className="text-sm color-gray">{element.usuario.telefone}</p>
+                  <p className="text-sm color-gray">{element.proprietario.telefone}</p>
                 </CardFooter>
               </Card>
             ))}

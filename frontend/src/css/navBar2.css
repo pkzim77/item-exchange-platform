@@ -44,7 +44,7 @@
 .navbar-links-right2 {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 2rem;
 }
 
 /* Estilo comum dos links */
@@ -64,4 +64,12 @@
 .nav-link2:active {
   color: #ffffff; /* mantém a mesma cor */
   background: none;
+}
+
+.height-6 {
+  height: 2rem;
+}
+
+.width-6 {
+  width: 2rem;
 }

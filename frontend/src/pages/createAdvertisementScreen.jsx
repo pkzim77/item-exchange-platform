@@ -33,8 +33,25 @@ export default function CreateAdvertisementScreen() {
     };
 
     const removeImage = (index) => {
-    setImages(images.filter((_, i) => i !== index));
-  };
+        setImages(images.filter((_, i) => i !== index));
+    };
+
+    const handleSubmit = async (e) => {
+        try {
+            const res = await axios.post("http://localhost:8080/api/itens", {
+                "nome": formData.title,
+                "descricao": formData.description,
+                "categoria": formData.category,
+                "fotoUrl": images[0],
+                "endereco": formData.address,
+                "proprietario": {
+                    "id": 3
+                }
+            })
+        } catch (error) {
+
+        }
+    }
 
     return (
         <div className='body-createAdvertisementScreen'>
@@ -48,7 +65,7 @@ export default function CreateAdvertisementScreen() {
                             <CardTitle>Informações do anúncio</CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <form action="" className='form-createAdvertisementScreen'>
+                            <form onSubmit={handleSubmit} className='form-createAdvertisementScreen'>
                                 <div className='space-y-2'>
                                     <label htmlFor="">Fotos do item</label>
                                     <div className='photo-upload-grid'>

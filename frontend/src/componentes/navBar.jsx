@@ -1,14 +1,19 @@
 import '../css/navBar.css'
 import logo from '../assets/iconLogo.png'
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { Avatar, AvatarFallback } from './avatar';
+import { useUser } from '../contexts/UserContext';
 
-function Navbar(){
-    return (
+function Navbar() {
+
+  const { user } = useUser();
+  
+  return (
     <nav className="navbar">
       <div className="navbar-container">
         {/* Logo */}
         <div className="navbar-logo">
-          <img src= {logo} alt="trocafácil" />
+          <img src={logo} alt="trocafácil" />
           <h1>TrocaFácil</h1>
         </div>
 
@@ -20,13 +25,22 @@ function Navbar(){
         </div>
 
         {/* Links de navegação a direita */}
-        <div className="navbar-links-right">
-          <Link to="/register" className="nav-link">Registre-se</Link>
-          <Link to="/login" className="nav-link">Faça Login</Link>
-        </div>
+        {user?
+          (<div className="navbar-links-right">
+            <Avatar className="height-6 width-6">
+              <AvatarFallback>{user.email[0]}</AvatarFallback>
+            </Avatar>
+          </div>) : 
+          (<div className="navbar-links-right">
+            <Link to="/register" className="nav-link">Registre-se</Link>
+            <Link to="/login" className="nav-link">Faça Login</Link>
+          </div>)
+
+        }
+
 
       </div>
     </nav>
   );
 }
-export {Navbar}
+export { Navbar }

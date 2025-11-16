@@ -9,9 +9,12 @@ import { useState } from 'react';
 import axios from 'axios'
 import PasswordStrengthBar from "react-password-strength-bar";
 import Swal from 'sweetalert2';
+import { useNavigate } from "react-router-dom";
 
 export default function RegisterScreen() {
-
+    const navigate = useNavigate();
+    const [name, setName] = useState("")
+    const [email, setEmail] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [password, setPassword] = useState("");
@@ -23,6 +26,14 @@ export default function RegisterScreen() {
         city: '',
         state: ''
     });
+
+    const handleName = (e) => {
+        setName(e.target.value)
+    }
+
+    const handleEmail = (e) => {
+        setEmail(e.target.value)
+    }
 
     const handleCepChange = (e) => {
         const valor = formatCep(e.target.value);
@@ -79,34 +90,48 @@ export default function RegisterScreen() {
     };
 
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (password !== confirmPassword) {
             Swal.fire({
-            title: 'As senhas não coincidem',
-            text: 'Por favor, digite a mesma senha nos dois campos.',
-            icon: 'warning',
-            confirmButtonText: 'OK'
-        });
+                title: 'As senhas não coincidem',
+                text: 'Por favor, digite a mesma senha nos dois campos.',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+            });
             return;
         }
 
-        console.log({
-            password,
-            confirmPassword,
-            phone,
-            cep,
-            address,
-        });
+        try {
+            const res = await axios.post("http://localhost:8080/api/usuarios", {
+                "nome": name,
+                "telefone": phone,
+                "logradouro": address.street,
+                "bairro": address.neighborhood,
+                "cidade": address.city,
+                "cep": cep,
+                "email": email,
+                "senha": password
+            })
+            Swal.fire({
+                title: 'Cadastro realizado!',
+                text: 'Seu cadastro foi realizado com sucesso.',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            });
+            navigate("/")
+        } catch (error) {
+            Swal.fire({
+                title: 'Erro ao realizar Cadastro',
+                text: 'Usuario já cadatrado no banco ou erro no servidor',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        }
 
 
-        Swal.fire({
-            title: 'Cadastro realizado!',
-            text: 'Seu cadastro foi realizado com sucesso.',
-            icon: 'success',
-            confirmButtonText: 'OK'
-        });
+
     };
 
     return (
@@ -115,7 +140,7 @@ export default function RegisterScreen() {
                 <Navbar2 />
             </header>
             <main className='main-registerScreen'>
-                <Card className="card">
+                <Card className='card-registerScreen'>
                     <CardHeader className="card-header2">
                         <CardTitle className="text-center margin0">Criar conta</CardTitle>
                         <CardDescription className="text-center">Preencha os dados abaixo para criar sua conta</CardDescription>
@@ -126,16 +151,28 @@ export default function RegisterScreen() {
                                 <label htmlFor="name">Nome Completo</label>
                                 <div className='relative'>
                                     <User className='icon-input' />
-                                    <Input type="text" id='name' placeholder="Digite seu nome completo"
-                                        className='pl-10' required />
+                                    <Input
+                                        type="text"
+                                        id='name'
+                                        placeholder="Digite seu nome completo"
+                                        className='pl-10'
+                                        onChange={handleName}
+                                        required
+                                    />
                                 </div>
                             </div>
                             <div className='space-y-2'>
                                 <label htmlFor="email">Email</label>
                                 <div className='relative'>
                                     <Mail className='icon-input' />
-                                    <Input type="email" id='email' placeholder="Digite seu email"
-                                        className='pl-10' required />
+                                    <Input
+                                        type="email"
+                                        id='email'
+                                        placeholder="Digite seu email"
+                                        className='pl-10'
+                                        onChange={handleEmail}
+                                        required
+                                    />
                                 </div>
                             </div>
                             <div className='space-y-2'>

@@ -32,6 +32,10 @@
 	        Item item = itemRepository.findById(itemId)
 	                .orElseThrow(() -> new ResourceNotFoundException("Item não encontrado"));
 	        Usuario comprador = usuarioService.findById(compradorId);
+	        
+	        if (!item.isDisponivel()) {
+	            throw new IllegalStateException("Este item já foi trocado e não está mais disponível para negociação.");
+	        }
  
 	        if (item.getProprietario().getId().equals(compradorId)) {
 	            throw new IllegalArgumentException("Você não pode negociar seu próprio item.");
@@ -52,33 +56,44 @@
 
 	    @Transactional
 	    public Negociacao confirmarTroca(Long negociacaoId, Long userId) {
-	        Negociacao negociacao = negociacaoRepository.findById(negociacaoId)
+	    	Negociacao negociacao = negociacaoRepository.findById(negociacaoId)
 	                .orElseThrow(() -> new ResourceNotFoundException("Negociação não encontrada"));
-	       
+
+	        // 1 — Só negociações PENDENTES podem ser confirmadas
 	        if (negociacao.getStatus() != StatusNegociacao.PENDENTE) {
-	             throw new IllegalStateException("A negociação não está no estado PENDENTE e não pode ser confirmada.");
+	            throw new IllegalStateException("A negociação não está mais pendente.");
 	        }
+
+	        Usuario usuario = usuarioService.findById(userId);
 
 	        Long proprietarioId = negociacao.getItem().getProprietario().getId();
 	        Long compradorId = negociacao.getComprador().getId();
 
-	 
-	        if (userId.equals(proprietarioId)) {
-	            negociacao.setProprietarioConfirmou(true);
-	        } else if (userId.equals(compradorId)) {
-	            negociacao.setCompradorConfirmou(true);
-	        } else {
+	        // 2 — Segurança: apenas comprador OU proprietário podem confirmar
+	        if (!userId.equals(proprietarioId) && !userId.equals(compradorId)) {
 	            throw new SecurityException("Usuário não autorizado a confirmar esta negociação.");
 	        }
 
-	        // Verifica se AMBAS as partes confirmaram
+	        // 3 — Impede que alguém confirme duas vezes
+	        if (userId.equals(proprietarioId) && negociacao.isProprietarioConfirmou()) {
+	            throw new IllegalStateException("O proprietário já confirmou.");
+	        }
+
+	        if (userId.equals(compradorId) && negociacao.isCompradorConfirmou()) {
+	            throw new IllegalStateException("O comprador já confirmou.");
+	        }
+
+	        // 4 — Marca a confirmação correta
+	        if (userId.equals(proprietarioId)) {
+	            negociacao.setProprietarioConfirmou(true);
+	        } else {
+	            negociacao.setCompradorConfirmou(true);
+	        }
+
+	        // 5 — Se ambos confirmaram → finaliza a negociação
 	        if (negociacao.isCompradorConfirmou() && negociacao.isProprietarioConfirmou()) {
-	            
-	            // A troca foi confirmada por ambos: FINALIZAÇÃO
 	            negociacao.setStatus(StatusNegociacao.FINALIZADA);
 	            negociacao.setDataFinalizacao(LocalDateTime.now());
-	            
-	            // Executa RF1.6: Remove o item do ar (inativa a disponibilidade)
 	            Item item = negociacao.getItem();
 	            item.setDisponivel(false);
 	            itemRepository.save(item);

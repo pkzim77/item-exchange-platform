@@ -34,7 +34,7 @@ public class Item {
  	
  	@ManyToOne(fetch = FetchType.EAGER)
  	@JoinColumn(name = "usuario_id", nullable = false)
- 	@JsonIgnoreProperties("itens")
+ 	@JsonIgnoreProperties({"itens", "senha", "email", "telefone", "logradouro"})
  	private Usuario proprietario;
  	
     @Column(nullable = false)
@@ -67,12 +67,12 @@ public class Item {
 	public String getEndereco() { return endereco; }
 	public void setEndereco(String endereco) { this.endereco = endereco; }
 
-	public Usuario getProprietario() { // Usado no NegociacaoService
+	public Usuario getProprietario() { 
 		return proprietario;
 	}
 
-	public void setUsuario(Usuario usuario) {
-		this.proprietario = usuario;
+	public void setProprietario(Usuario proprietario) {
+		this.proprietario = proprietario;
 	}
 
     public boolean isDisponivel() {

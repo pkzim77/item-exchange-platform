@@ -34,7 +34,7 @@ public class ItemService {
                 .orElseThrow(() -> new ResponseStatusException(
                                 HttpStatus.NOT_FOUND,
                                 "Usuário com ID " + item.getProprietario().getId() + " não encontrado."));
-        item.setUsuario(usuarioCompleto); 
+        item.setProprietario(usuarioCompleto); 
         return itemRepository.save(item);
     }
 
@@ -87,7 +87,7 @@ public class ItemService {
                  		.orElseThrow(() -> new ResponseStatusException(
                                 HttpStatus.NOT_FOUND,
                                 "Novo Usuário com ID " + novoUsuarioId + " não encontrado."));
-                 itemExistente.setUsuario(usuarioCompleto);
+                 itemExistente.setProprietario(usuarioCompleto);
             }
             
             // Atualização dos campos do item

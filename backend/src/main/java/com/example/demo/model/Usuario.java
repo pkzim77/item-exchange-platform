@@ -56,7 +56,7 @@ public class Usuario implements UserDetails {
 	private Double notaAvaliacao = 0.0;
 	
 	@OneToMany(mappedBy = "proprietario", cascade = CascadeType.ALL, orphanRemoval = true)
-	@JsonIgnoreProperties("proprietario")
+	@com.fasterxml.jackson.annotation.JsonIgnore
 	private List<Item> itens;
 	
 	public Usuario() {
@@ -161,9 +161,7 @@ public class Usuario implements UserDetails {
 	public void setNotaAvaliacao(Double notaAvaliacao) {
 		this.notaAvaliacao = notaAvaliacao;
 	}
-	
-	
-	
+
 	public List<Item> getItens() {
 	 return itens;
 	}

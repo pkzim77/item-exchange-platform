@@ -1,7 +1,6 @@
 
-	package com.example.demo.controller;
-
-	import com.example.demo.model.Negociacao;
+package com.example.demo.controller;
+import com.example.demo.model.Negociacao;
 	import com.example.demo.model.Usuario;
 	import com.example.demo.service.NegociacaoService;
 	import com.example.demo.service.UsuarioService;
@@ -11,16 +10,16 @@
 	import org.springframework.security.core.context.SecurityContextHolder;
 	import org.springframework.web.bind.annotation.*;
 
-	import java.util.List;
+import java.util.List;
 
-	@RestController
-	@RequestMapping("/api/negociacoes")
-	public class NegociacaoController {
+@RestController
+@RequestMapping("/api/negociacoes")
+public class NegociacaoController {
 
-	    private final NegociacaoService negociacaoService;
-	    private final UsuarioService usuarioService;
+	 private final NegociacaoService negociacaoService;
+	private final UsuarioService usuarioService;
 
-	    public NegociacaoController(NegociacaoService negociacaoService, UsuarioService usuarioService) {
+	public NegociacaoController(NegociacaoService negociacaoService, UsuarioService usuarioService) {
 	        this.negociacaoService = negociacaoService;
 	        this.usuarioService = usuarioService;
 	    }

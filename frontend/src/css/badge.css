@@ -1,0 +1,113 @@
+/* Estilos base do badge */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  border: 1px solid;
+  padding: 2px 8px;
+  font-size: 12px;
+  font-weight: 500;
+  width: fit-content;
+  white-space: nowrap;
+  flex-shrink: 0;
+  gap: 4px;
+  transition: color 0.2s, box-shadow 0.2s;
+  overflow: hidden;
+}
+
+/* Ícones SVG dentro do badge */
+.badge > svg {
+  width: 12px;
+  height: 12px;
+  pointer-events: none;
+}
+
+/* Foco visível */
+.badge:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+  border-color: rgb(59, 130, 246);
+}
+
+/* Estado inválido */
+.badge[aria-invalid="true"] {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+  border-color: rgb(239, 68, 68);
+}
+
+/* ========== VARIANTES ========== */
+
+/* Variante padrão (primário) */
+.badge-default {
+  border-color: transparent;
+  background-color: rgb(59, 130, 246); /* azul */
+  color: white;
+}
+
+a.badge-default:hover {
+  background-color: rgb(37, 99, 235); /* azul mais escuro */
+}
+
+/* Variante secundária */
+.badge-secondary {
+  border-color: transparent;
+  background-color: #6B7280; /* cinza */
+  color: white; /* texto escuro */
+}
+
+a.badge-secondary:hover {
+  background-color: rgb(107, 114, 128); /* cinza mais escuro */
+}
+
+/* Variante destrutiva (erro) */
+.badge-destructive {
+  border-color: transparent;
+  background-color: rgb(239, 68, 68); /* vermelho */
+  color: white;
+}
+
+a.badge-destructive:hover {
+  background-color: rgb(220, 38, 38); /* vermelho mais escuro */
+}
+
+.badge-destructive:focus-visible {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+}
+
+/* Variante outline (apenas contorno) */
+.badge-outline {
+  background-color: transparent;
+  border-color: rgb(229, 231, 235); /* borda cinza clara */
+  color: rgb(17, 24, 39); /* texto escuro */
+}
+
+a.badge-outline:hover {
+  background-color: rgb(243, 244, 246); /* fundo cinza claro */
+  color: rgb(17, 24, 39);
+}
+
+/* Modo escuro (dark mode) */
+@media (prefers-color-scheme: dark) {
+  .badge[aria-invalid="true"] {
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.4);
+  }
+  
+  .badge-destructive {
+    background-color: rgba(239, 68, 68, 0.6);
+  }
+  
+  .badge-destructive:focus-visible {
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.4);
+  }
+  
+  .badge-outline {
+    border-color: rgb(75, 85, 99);
+    color: rgb(243, 244, 246);
+  }
+  
+  a.badge-outline:hover {
+    background-color: rgb(55, 65, 81);
+    color: rgb(243, 244, 246);
+  }
+}

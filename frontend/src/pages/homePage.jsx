@@ -5,12 +5,15 @@ import { Card, CardContent, CardFooter, CardHeader } from '../componentes/card';
 import { Avatar, AvatarFallback } from "../componentes/avatar";
 import { SearchBar } from "../componentes/searchBar";
 import { Navbar } from "../componentes/navBar";
+import { useNavigate } from 'react-router-dom';
 
 export default function HomePage() {
   const [itens, setItens] = useState([])
   const [loadingItens, setLoadingItens] = useState(true);
   const [category, setCategory] = useState('')
   const [termSearch, setTermSearch] = useState('')
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function chamaItens() {
@@ -22,7 +25,7 @@ export default function HomePage() {
           }
         });
         const data = response.data.content;
-        
+
         // 🔍 Aplica filtros combinados (categoria + termo)
         const filtered = data.filter((item) => {
           // verifica se a categoria bate ou se não há filtro
@@ -73,7 +76,11 @@ export default function HomePage() {
         ) : (
           <div className="container-grid">
             {itens.map((element) => (
-              <Card key={element.id}>
+              <Card
+                key={element.id}
+                onClick={() => navigate(`/advertisementDetails/${element.id}`)}
+
+              >
                 <CardHeader>
                   <img
                     src={element.fotoUrl}

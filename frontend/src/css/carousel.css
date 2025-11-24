@@ -1,0 +1,92 @@
+.carousel-container {
+    position: relative;
+    width: 100%;
+}
+
+.carousel-viewport {
+    overflow: hidden;
+    width: 100%;
+    border-radius: 8px 0 0 20px;
+}
+
+.carousel-track {
+    display: flex;
+    transition: transform 0.3s ease;
+}
+
+.carousel-track.horizontal {
+    flex-direction: row;
+    margin-left: -16px;
+}
+
+.carousel-track.vertical {
+    flex-direction: column;
+    margin-top: -16px;
+}
+
+.carousel-item {
+    flex: 0 0 100%;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+.vertical-item {
+   padding-top: 16px;
+}
+
+.carousel-btn {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    padding: 0.5rem;
+    border-radius: 50%;
+    border: 1px solid #ccc;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.carousel-btn:hover:not(:disabled) {
+    background: #f0f0f0;
+}
+
+.carousel-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.prev.horizontal {
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.next.horizontal {
+    top: 50%;
+    right: 2rem;
+    transform: translateY(-50%);
+}
+
+.prev.vertical {
+    top: -48px;
+    transform: translateX(-50%) rotate(90deg);
+}
+
+.next.vertical {
+    bottom: -48px;
+    left: 50%;
+    transform: translateX(-50%) rotate(90deg);
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}

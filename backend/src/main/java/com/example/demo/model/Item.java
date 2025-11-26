@@ -1,10 +1,13 @@
 package com.example.demo.model;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -27,8 +30,12 @@ public class Item {
  	private String descricao;
  	@Column(nullable = false, length = 50)
  	private String categoria;
- 	@Column(name = "foto_url")
- 	private String fotoUrl;	
+ 	
+ 	@ElementCollection(fetch = FetchType.EAGER)
+ 	@CollectionTable(name = "item_imagens",joinColumns = @JoinColumn(name = "item_id"))
+ 	@Column(name = "imagem_url", length = 500)
+ 	private List<String> imagens;
+ 	
  	@Column(nullable = false)
  	private String endereco;	
  	
@@ -61,11 +68,15 @@ public class Item {
 	public String getCategoria() { return categoria; }
 	public void setCategoria(String categoria) { this.categoria = categoria; }
 
-	public String getFotoUrl() { return fotoUrl; }
-	public void setFotoUrl(String fotoUrl) { this.fotoUrl = fotoUrl; }
+	 public List<String> getImagens() { return imagens; }
+	 public void setImagens(List<String> imagens) { this.imagens = imagens; }
 
-	public String getEndereco() { return endereco; }
-	public void setEndereco(String endereco) { this.endereco = endereco; }
+	public String getEndereco() {
+		return endereco; 
+		}
+	public void setEndereco(String endereco) {
+		this.endereco = endereco; 
+		}
 
 	public Usuario getProprietario() { 
 		return proprietario;

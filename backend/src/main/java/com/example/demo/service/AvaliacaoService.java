@@ -11,6 +11,7 @@
 	import org.springframework.transaction.annotation.Transactional;
 
 	import java.time.LocalDateTime;
+import java.util.List;
 
 	@Service
 	public class AvaliacaoService {
@@ -73,17 +74,31 @@
 	    @Transactional
 	    public void recalcularNotaUsuario(Long usuarioId) {
 	        Double media = avaliacaoRepository.calcularMediaAvaliacoesPorUsuario(usuarioId);
+	        Integer total = avaliacaoRepository.contarAvaliacoesPorUsuario(usuarioId);
+
 	        Usuario usuario = usuarioService.findById(usuarioId);
 
 	        if (media != null) {
-	            // Arredonda para duas casas decimais, se necessário
-	            double notaArredondada = Math.round(media * 10.0) / 10.0; 
+	            double notaArredondada = Math.round(media * 10.0) / 10.0;
 	            usuario.setNotaAvaliacao(notaArredondada);
 	        } else {
-	            usuario.setNotaAvaliacao(0.0); // Ou algum valor inicial
+	            usuario.setNotaAvaliacao(0.0);
 	        }
-	        // O UsuarioService deve salvar a alteração
-	        usuarioService.save(usuario); 
+
+	        usuario.setQuantidadeAvaliacoes(total != null ? total : 0);
+
+	        usuarioService.save(usuario);
 	    }
+	    
+	    public List<Avaliacao> listarTodas() {
+	        return avaliacaoRepository.findAll();
+	    }
+	    
+	    public Avaliacao buscarPorNegociacao(Long negociacaoId) {
+	        return avaliacaoRepository.findByNegociacaoId(negociacaoId)
+	                .orElseThrow(() -> new ResourceNotFoundException("Nenhuma avaliação encontrada para esta negociação."));
+	    }
+	    
+	    
 	}
 

@@ -1,17 +1,19 @@
 package com.example.demo.dto;
 
 public class TokenResponse {
+	private Long id;
 	private String accessToken;
     private String tipo;
     private String nomeUsuario;
     private String email;
 
     // Construtor
-    public TokenResponse(String accessToken, String tipo, String nomeUsuario, String email) {
+    public TokenResponse(String accessToken, String tipo, String nomeUsuario, String email,long id) {
         this.accessToken = accessToken;
         this.tipo = tipo;
         this.nomeUsuario = nomeUsuario;
         this.email = email;
+        this.id = id;
     }
 
     // Getters
@@ -29,6 +31,14 @@ public class TokenResponse {
 
     public String getEmail() {
         return email;
+    }
+    
+    public Long getId() {
+        return id;
+    }
+    
+    public void setId(Long id) {
+        this.id = id;
     }
     
     // Setters (Opcionais, mas recomendados)

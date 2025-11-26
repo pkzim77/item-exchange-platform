@@ -43,5 +43,16 @@ public class AvaliacaoController {
 	            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 	     }
 	 }
+	    @GetMapping
+	    public ResponseEntity<?> listarAvaliacoes() {
+	        return ResponseEntity.ok(avaliacaoService.listarTodas());
+	    }
+	    
+	    @GetMapping("/negociacao/{negociacaoId}")
+	    public ResponseEntity<?> buscarPorNegociacao(@PathVariable Long negociacaoId) {
+	        return ResponseEntity.ok(avaliacaoService.buscarPorNegociacao(negociacaoId));
+	    }
+	    
+
 }
 

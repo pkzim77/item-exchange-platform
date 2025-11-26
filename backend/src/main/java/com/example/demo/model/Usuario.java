@@ -59,6 +59,9 @@ public class Usuario implements UserDetails {
 	@com.fasterxml.jackson.annotation.JsonIgnore
 	private List<Item> itens;
 	
+	@Column(name = "qtd_avaliacoes", nullable = false)
+	private Integer quantidadeAvaliacoes = 0;
+	
 	public Usuario() {
 		
 	}
@@ -168,6 +171,14 @@ public class Usuario implements UserDetails {
 
 	public void setItens(List<Item> itens) {
 	this.itens = itens;
+	}
+	
+	public Integer getQuantidadeAvaliacoes() {
+	    return quantidadeAvaliacoes;
+	}
+
+	public void setQuantidadeAvaliacoes(Integer quantidadeAvaliacoes) {
+	    this.quantidadeAvaliacoes = quantidadeAvaliacoes;
 	}
 	
 	@Override

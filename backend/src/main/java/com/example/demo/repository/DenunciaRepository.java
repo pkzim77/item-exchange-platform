@@ -11,4 +11,6 @@
 
 	    List<Denuncia> findByStatus(Denuncia.StatusDenuncia status);
 	}
+	
+	
 

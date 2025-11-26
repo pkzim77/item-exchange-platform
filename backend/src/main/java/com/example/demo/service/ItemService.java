@@ -94,7 +94,7 @@ public class ItemService {
             itemExistente.setNome(itemAtualizado.getNome());
             itemExistente.setDescricao(itemAtualizado.getDescricao());
             itemExistente.setCategoria(itemAtualizado.getCategoria());
-            itemExistente.setFotoUrl(itemAtualizado.getFotoUrl());
+            itemExistente.setImagens(itemAtualizado.getImagens());
             itemExistente.setEndereco(itemAtualizado.getEndereco());
             
             return itemRepository.save(itemExistente);

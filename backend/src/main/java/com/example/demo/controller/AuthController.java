@@ -32,11 +32,7 @@ public class AuthController {
 						String token = jwtService.generateToken(usuarioAutenticado);
 			
 			// 💡 RETORNA O TOKEN ENCAPSULADO NO DTO DE RESPOSTA
-			TokenResponse response = new TokenResponse(
-					token, 
-					"Bearer", 
-					usuarioAutenticado.getNome(),
-					usuarioAutenticado.getEmail());
+			TokenResponse response = new TokenResponse(token,"Bearer", usuarioAutenticado.getNome(),usuarioAutenticado.getEmail(),usuarioAutenticado.getId());
 			
 			return ResponseEntity.ok(response);	
 			

@@ -16,6 +16,13 @@
 
 	    @Query("SELECT AVG(a.nota) FROM Avaliacao a WHERE a.avaliado.id = :usuarioId")
 	    Double calcularMediaAvaliacoesPorUsuario(@Param("usuarioId") Long usuarioId);
+	    
+	    @Query("SELECT COUNT(a) FROM Avaliacao a WHERE a.avaliado.id = :usuarioId")
+	    Integer contarAvaliacoesPorUsuario(Long usuarioId);
+	    
+	    
 
 	}
+	
+	
 

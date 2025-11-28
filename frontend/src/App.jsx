@@ -6,6 +6,7 @@ import CreateAdvertisementScreen from './pages/createAdvertisementScreen';
 import AdvertisementDetailsScreen from './pages/advertisementDetailsScreen';
 import { UserProvider } from './contexts/UserContext';
 import './App.css'
+import ReviewScreen from './pages/reviewScreen';
 
 export default function AppRoutes() {
   return (
@@ -16,6 +17,7 @@ export default function AppRoutes() {
           <Route path="/login" element={<LoginScreen />} />
           <Route path="/createAdvertisement" element={<CreateAdvertisementScreen />} />
           <Route path="/advertisementDetails/:id" element={<AdvertisementDetailsScreen />} />
+          <Route path="/reviewScreen/:id" element={<ReviewScreen />} />
         </Routes>
       </BrowserRouter>
   );

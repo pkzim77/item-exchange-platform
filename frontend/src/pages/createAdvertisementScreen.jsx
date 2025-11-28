@@ -12,6 +12,8 @@ import { TextArea } from '../componentes/textArea'
 
 export default function CreateAdvertisementScreen() {
 
+    const user = JSON.parse(localStorage.getItem("user"));
+    console.log(user)
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
         title: '',
@@ -20,39 +22,118 @@ export default function CreateAdvertisementScreen() {
         address: '',
     });
     const [images, setImages] = useState([])
+    const [loading, setLoading] = useState(false);
+
+    // Cleanup das URLs de preview para evitar memory leaks
+    useEffect(() => {
+        return () => {
+            images.forEach(img => {
+                if (img.preview) {
+                    URL.revokeObjectURL(img.preview);
+                }
+            });
+        };
+    }, [images]);
 
     const handleCancel = () => {
+        // Limpar as URLs de preview antes de cancelar
+        images.forEach(img => {
+            if (img.preview) {
+                URL.revokeObjectURL(img.preview);
+            }
+        });
         navigate('/');
     };
 
     const handleImageUpload = (e) => {
-        if (e.target.files && e.target.files[0]) {
-            const newImage = URL.createObjectURL(e.target.files[0]);
-            setImages([...images, newImage]);
+        const file = e.target.files[0];
+        if (file) {
+            // Validar tipo de arquivo
+            if (!file.type.startsWith('image/')) {
+                alert('Por favor, selecione apenas arquivos de imagem');
+                return;
+            }
+
+            // Validar tamanho (máximo 5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                alert('A imagem deve ter no máximo 5MB');
+                return;
+            }
+
+            file.preview = URL.createObjectURL(file);
+            setImages([...images, file]);
         }
     };
 
     const removeImage = (index) => {
+        const imageToRemove = images[index];
+        if (imageToRemove.preview) {
+            URL.revokeObjectURL(imageToRemove.preview);
+        }
         setImages(images.filter((_, i) => i !== index));
     };
 
+    // Função para converter imagem para Base64
+    const convertToBase64 = (file) => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
+        });
+    };
+
     const handleSubmit = async (e) => {
-        try {
-            const res = await axios.post("http://localhost:8080/api/itens", {
-                "nome": formData.title,
-                "descricao": formData.description,
-                "categoria": formData.category,
-                "fotoUrl": images[0],
-                "endereco": formData.address,
-                "proprietario": {
-                    "id": 3
-                }
-            })
-        } catch (error) {
+        e.preventDefault();
 
+        if (images.length === 0) {
+            alert("Por favor, adicione pelo menos uma foto do item");
+            return;
         }
-    }
+        if (!formData.category) {
+            alert("Por favor, selecione uma categoria");
+            return;
+        }
 
+        setLoading(true);
+
+       try {
+    const token = localStorage.getItem("token");
+
+    // Converter todas as imagens para Base64
+    const imagensBase64 = await Promise.all(
+      images.map(img => convertToBase64(img))
+    );
+
+    const body = {
+      nome: formData.title,
+      descricao: formData.description,
+      categoria: formData.category,
+      imagens: imagensBase64,
+      endereco: formData.address,
+      proprietario: {"id": user.id}
+      
+    };
+
+    console.log("JSON enviado:", body);
+
+    await axios.post("http://localhost:8080/api/itens", body, {
+      headers: {
+        "Authorization": `Bearer ${token}`,
+      }
+    });
+
+    alert("Anúncio criado com sucesso!");
+    setFormData({ title: '', category: '', description: '', address: '' });
+    setImages([]);
+    navigate('/');
+  } catch (error) {
+    console.error(error);
+    alert("Erro ao criar o anúncio.");
+  } finally {
+    setLoading(false);
+  }
+};
     return (
         <div className='body-createAdvertisementScreen'>
             <header>
@@ -72,7 +153,7 @@ export default function CreateAdvertisementScreen() {
                                         {images.map((image, index) => (
                                             <div key={index} className='relative'>
                                                 <img
-                                                    src={image}
+                                                    src={image.preview}
                                                     alt={`Upload ${index + 1}`}
                                                     className='item-preview'
                                                 />
@@ -116,7 +197,7 @@ export default function CreateAdvertisementScreen() {
 
                                 <div className="space-y-2">
                                     <label htmlFor="category">Categoria</label>
-                                    <select name="" id="" onChange={(e) => option(e.target.value)} className='select-createAdvertisementScreen'>
+                                    <select onChange={(e) => setFormData({ ...formData, category: e.target.value })} className='select-createAdvertisementScreen'>
                                         <option value='' >Todas</option>
                                         <option value="Esportes">Esportes</option>
                                         <option value="Livros">Livros</option>

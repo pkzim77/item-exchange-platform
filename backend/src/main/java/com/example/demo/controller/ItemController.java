@@ -36,7 +36,7 @@ public class ItemController {
 
     @GetMapping
     public ResponseEntity<Page<Item>> getAllItens(
-            @PageableDefault(size = 10, page = 0) Pageable pageable) {
+            @PageableDefault(size = 50, page = 0) Pageable pageable) {
             
             Page<Item> itensPage = itemService.findAll(pageable);
             

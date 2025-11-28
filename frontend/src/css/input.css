@@ -1,7 +1,7 @@
 .input {
   /* Layout e dimensões */
   display: flex;
-  height: 2.25rem; /* 36px */
+  height: 2.25rem; 
   width: 100%;
   min-width: 0;
   border-radius: 0.375rem; /* 6px */

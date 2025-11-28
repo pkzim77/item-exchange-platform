@@ -36,11 +36,10 @@ export default function LoginScreen() {
                 email: res.data.email,
             });
 
-            //const id = res.data.id; 
-
             // Salva o token no localStorage
             localStorage.setItem("user", JSON.stringify({
                 email: res.data.email,
+                id: res.data.id
             }));
             localStorage.setItem("token", token);
 

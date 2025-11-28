@@ -25,6 +25,7 @@ export default function HomePage() {
           }
         });
         const data = response.data.content;
+        console.log(data)
 
         // 🔍 Aplica filtros combinados (categoria + termo)
         const filtered = data.filter((item) => {
@@ -83,7 +84,7 @@ export default function HomePage() {
               >
                 <CardHeader>
                   <img
-                    src={element.fotoUrl}
+                    src={element.imagens[0]}
                     alt={element.nome}
                     className="card-img"
                   />

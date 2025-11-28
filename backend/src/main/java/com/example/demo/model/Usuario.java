@@ -56,8 +56,11 @@ public class Usuario implements UserDetails {
 	private Double notaAvaliacao = 0.0;
 	
 	@OneToMany(mappedBy = "proprietario", cascade = CascadeType.ALL, orphanRemoval = true)
-	@JsonIgnoreProperties("proprietario")
+	@com.fasterxml.jackson.annotation.JsonIgnore
 	private List<Item> itens;
+	
+	@Column(name = "qtd_avaliacoes", nullable = false)
+	private Integer quantidadeAvaliacoes = 0;
 	
 	public Usuario() {
 		
@@ -161,15 +164,21 @@ public class Usuario implements UserDetails {
 	public void setNotaAvaliacao(Double notaAvaliacao) {
 		this.notaAvaliacao = notaAvaliacao;
 	}
-	
-	
-	
+
 	public List<Item> getItens() {
 	 return itens;
 	}
 
 	public void setItens(List<Item> itens) {
 	this.itens = itens;
+	}
+	
+	public Integer getQuantidadeAvaliacoes() {
+	    return quantidadeAvaliacoes;
+	}
+
+	public void setQuantidadeAvaliacoes(Integer quantidadeAvaliacoes) {
+	    this.quantidadeAvaliacoes = quantidadeAvaliacoes;
 	}
 	
 	@Override

@@ -23,6 +23,8 @@ export default function AdvertisementDetailsScreen() {
         "https://images.unsplash.com/uploads/14122621859313b34d52b/37e28531?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fGJpa2V8ZW58MHx8MHx8fDA%3D"
     ]
 
+    const navigate = useNavigate();
+
     const { id } = useParams();
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -62,10 +64,10 @@ export default function AdvertisementDetailsScreen() {
                         <CardContent className='cardContent-advertisementDetailsScreen flex items-start justify-between mb-4'>
                             <Carousel className="mb-6">
                                 <CarouselContent>
-                                    {imagens.map((image, index) => (
+                                    {data.imagens.map((element, index) => (
                                         <CarouselItem key={index}>
                                             <img
-                                                src={image}
+                                                src={element}
                                                 alt={`${data.nome} - Imagem ${index + 1}`}
                                                 className="imagem-carrossel"
                                             />
@@ -88,7 +90,7 @@ export default function AdvertisementDetailsScreen() {
                                 <p className="text-gray-700 margin0">{data.descricao}</p>
                             </div>
 
-                            <Card className="bg-gray-50 mb-6 w-full">
+                            <Card className="bg-gray-50 mb-6 w-full" onClick={() => navigate(`/reviewScreen/${id}`)}>
                                 <CardContent className="p-4">
                                     <h3 className="margin0 mb-3">Anunciante</h3>
                                     <div className="flex items-center justify-between">

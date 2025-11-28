@@ -1,0 +1,16 @@
+.separator-root {
+  flex-shrink: 0;
+  background-color: #e5e7eb; /* Cor da borda */
+}
+
+/* Orientação horizontal */
+.separator-horizontal {
+  height: 1px;
+  width: 100%;
+}
+
+/* Orientação vertical */
+.separator-vertical {
+  height: 100%;
+  width: 1px;
+}

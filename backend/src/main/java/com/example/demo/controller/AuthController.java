@@ -10,13 +10,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.dto.LoginRequest;
 import com.example.demo.dto.TokenResponse; 
 import com.example.demo.model.Usuario;
-import com.example.demo.segurity.JwtService;
+import com.example.demo.security.JwtService;
 import com.example.demo.service.UsuarioService;
 
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
-	
 	private final UsuarioService usuarioService;
 	private final JwtService jwtService; 
 
@@ -24,28 +23,20 @@ public class AuthController {
 		this.usuarioService = usuarioService;
 		this.jwtService = jwtService; 
 	}
-	
 	@PostMapping("/login")
 	public ResponseEntity<?> login(@RequestBody LoginRequest credenciais) {
 		try {
 			Usuario usuarioAutenticado = usuarioService.autenticar(
 					credenciais.getEmail(),
 					credenciais.getSenha());
-			
-
 						String token = jwtService.generateToken(usuarioAutenticado);
 			
 			// 💡 RETORNA O TOKEN ENCAPSULADO NO DTO DE RESPOSTA
-			TokenResponse response = new TokenResponse(
-					token, 
-					"Bearer", 
-					usuarioAutenticado.getNome(),
-					usuarioAutenticado.getEmail());
+			TokenResponse response = new TokenResponse(token,"Bearer", usuarioAutenticado.getNome(),usuarioAutenticado.getEmail(),usuarioAutenticado.getId());
 			
 			return ResponseEntity.ok(response);	
 			
 		} catch (RuntimeException e) {
-
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED); 
 		}
 	}

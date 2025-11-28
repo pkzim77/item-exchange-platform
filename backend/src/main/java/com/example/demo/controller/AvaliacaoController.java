@@ -1,7 +1,7 @@
 
-	package com.example.demo.controller;
+package com.example.demo.controller;
 
-	import com.example.demo.model.Avaliacao;
+import com.example.demo.model.Avaliacao;
 	import com.example.demo.service.AvaliacaoService;
 	import com.example.demo.service.UsuarioService;
 	import org.springframework.http.HttpStatus;
@@ -10,23 +10,22 @@
 	import org.springframework.security.core.context.SecurityContextHolder;
 	import org.springframework.web.bind.annotation.*;
 
-	@RestController
-	@RequestMapping("/api/avaliacoes")
-	public class AvaliacaoController {
+@RestController
+@RequestMapping("/api/avaliacoes")
+public class AvaliacaoController {
+	 private final AvaliacaoService avaliacaoService;
+	 private final UsuarioService usuarioService; 
 
-	    private final AvaliacaoService avaliacaoService;
-	    private final UsuarioService usuarioService; 
-
-	    public AvaliacaoController(AvaliacaoService avaliacaoService, UsuarioService usuarioService) {
-	        this.avaliacaoService = avaliacaoService;
-	        this.usuarioService = usuarioService;
+	 public AvaliacaoController(AvaliacaoService avaliacaoService, UsuarioService usuarioService) {
+	       this.avaliacaoService = avaliacaoService;
+	       this.usuarioService = usuarioService;
 	    }
 
-	    private Long getAuthenticatedUserId() {
-	        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-	        String userEmail = authentication.getName();
-	        // Usando o findByEmail que retorna Usuario (já ajustado)
-	        return usuarioService.findByEmail(userEmail).getId();
+	 private Long getAuthenticatedUserId() {
+	       Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+	       String userEmail = authentication.getName();
+	       // Usando o findByEmail que retorna Usuario (já ajustado)
+	       return usuarioService.findByEmail(userEmail).getId();
 	    }
 
 	    @PostMapping("/{negociacaoId}")
@@ -38,10 +37,22 @@
 
 	        try {
 	            Avaliacao novaAvaliacao = avaliacaoService.salvarAvaliacao(avaliacao, negociacaoId, avaliadorId);
-	            return new ResponseEntity<>(novaAvaliacao, HttpStatus.CREATED);
-	        } catch (IllegalStateException | SecurityException | IllegalArgumentException e) {
+	            return new ResponseEntity<>(novaAvaliacao, HttpStatus.CREATED); 
+	        	} 
+	        catch (IllegalStateException | SecurityException | IllegalArgumentException e) {
 	            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-	        }
+	     }
+	 }
+	    @GetMapping
+	    public ResponseEntity<?> listarAvaliacoes() {
+	        return ResponseEntity.ok(avaliacaoService.listarTodas());
 	    }
-	}
+	    
+	    @GetMapping("/negociacao/{negociacaoId}")
+	    public ResponseEntity<?> buscarPorNegociacao(@PathVariable Long negociacaoId) {
+	        return ResponseEntity.ok(avaliacaoService.buscarPorNegociacao(negociacaoId));
+	    }
+	    
+
+}
 

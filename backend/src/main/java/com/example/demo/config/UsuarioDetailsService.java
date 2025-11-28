@@ -21,7 +21,7 @@ public class UsuarioDetailsService implements UserDetailsService{
 
 		Usuario usuario = usuarioRepository.findByEmail(email)
 				.orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
-	 return usuario;
+		return new UsuarioDetails(usuario);
 		}
 	}
 

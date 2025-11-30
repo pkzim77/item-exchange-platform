@@ -31,8 +31,10 @@
 	        Usuario denunciante = usuarioService.findById(denuncianteId);
 
 	        if (item.getProprietario().getId().equals(denuncianteId)) {
-	            throw new IllegalArgumentException("Você não pode denunciar seu próprio item.");
-	        }
+	            throw new IllegalArgumentException("Você não pode denunciar seu próprio item.");}
+	        
+	        if (denunciaRepository.existsByItemIdAndDenuncianteId(itemId, denuncianteId)) {	
+	        	throw new IllegalArgumentException("Você já denunciou este item.");}
 
 	        // 2. Criar a Denúncia
 	        Denuncia denuncia = new Denuncia();

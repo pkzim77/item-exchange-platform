@@ -2,57 +2,53 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.Avaliacao;
-	import com.example.demo.service.AvaliacaoService;
-	import com.example.demo.service.UsuarioService;
-	import org.springframework.http.HttpStatus;
-	import org.springframework.http.ResponseEntity;
-	import org.springframework.security.core.Authentication;
-	import org.springframework.security.core.context.SecurityContextHolder;
-	import org.springframework.web.bind.annotation.*;
+import com.example.demo.service.AvaliacaoService;
+import com.example.demo.service.UsuarioService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/avaliacoes")
 public class AvaliacaoController {
-	 private final AvaliacaoService avaliacaoService;
-	 private final UsuarioService usuarioService; 
 
-	 public AvaliacaoController(AvaliacaoService avaliacaoService, UsuarioService usuarioService) {
-	       this.avaliacaoService = avaliacaoService;
-	       this.usuarioService = usuarioService;
-	    }
+    private final AvaliacaoService service;
+    private final UsuarioService usuarioService;
 
-	 private Long getAuthenticatedUserId() {
-	       Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-	       String userEmail = authentication.getName();
-	       // Usando o findByEmail que retorna Usuario (já ajustado)
-	       return usuarioService.findByEmail(userEmail).getId();
-	    }
+    public AvaliacaoController(AvaliacaoService service, UsuarioService usuarioService) {
+        this.service = service;
+        this.usuarioService = usuarioService;
+    }
 
-	    @PostMapping("/{negociacaoId}")
-	    public ResponseEntity<?> criarAvaliacao(
-	            @PathVariable Long negociacaoId,
-	            @RequestBody Avaliacao avaliacao) {
-	        
-	        Long avaliadorId = getAuthenticatedUserId();
+    private Long getUserId() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return usuarioService.findByEmail(auth.getName()).getId();
+    }
 
-	        try {
-	            Avaliacao novaAvaliacao = avaliacaoService.salvarAvaliacao(avaliacao, negociacaoId, avaliadorId);
-	            return new ResponseEntity<>(novaAvaliacao, HttpStatus.CREATED); 
-	        	} 
-	        catch (IllegalStateException | SecurityException | IllegalArgumentException e) {
-	            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-	     }
-	 }
-	    @GetMapping
-	    public ResponseEntity<?> listarAvaliacoes() {
-	        return ResponseEntity.ok(avaliacaoService.listarTodas());
-	    }
-	    
-	    @GetMapping("/negociacao/{negociacaoId}")
-	    public ResponseEntity<?> buscarPorNegociacao(@PathVariable Long negociacaoId) {
-	        return ResponseEntity.ok(avaliacaoService.buscarPorNegociacao(negociacaoId));
-	    }
-	    
+    @PostMapping("/{negociacaoId}")
+    public ResponseEntity<?> criar(@PathVariable Long negociacaoId,
+                                   @RequestBody Avaliacao avaliacao) {
+        return ResponseEntity.status(201)
+                .body(service.salvar(negociacaoId, avaliacao, getUserId()));
+    }
 
+    @GetMapping("/avaliado/{usuarioId}")
+    public ResponseEntity<?> listarAvaliados(@PathVariable Long usuarioId) {
+        return ResponseEntity.ok(service.listarPorAvaliado(usuarioId));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> editar(@PathVariable Long id,
+                                    @RequestBody Avaliacao avaliacao) {
+        return ResponseEntity.ok(service.editar(id, avaliacao, getUserId()));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> excluir(@PathVariable Long id) {
+        service.excluir(id, getUserId());
+        return ResponseEntity.ok("Avaliação removida com sucesso.");
+    }
 }
+
 

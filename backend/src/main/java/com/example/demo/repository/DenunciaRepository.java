@@ -10,7 +10,9 @@
 	public interface DenunciaRepository extends JpaRepository<Denuncia, Long> {
 
 	    List<Denuncia> findByStatus(Denuncia.StatusDenuncia status);
+	    boolean existsByItemIdAndDenuncianteId(Long itemId, Long denuncianteId);
 	}
 	
-	
+
+
 

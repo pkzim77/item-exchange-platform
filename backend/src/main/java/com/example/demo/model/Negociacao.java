@@ -15,7 +15,7 @@ public class Negociacao {
 
     @ManyToOne
     @JoinColumn(name = "item_id", nullable = false)
-    @JsonIgnoreProperties({"proprietario", "descricao", "endereco"})
+    @JsonIgnoreProperties({"descricao", "endereco"})
     private Item item;
 
     @ManyToOne
@@ -35,7 +35,8 @@ public class Negociacao {
     private LocalDateTime dataCriacao = LocalDateTime.now();
 
     private LocalDateTime dataFinalizacao;
-
+    
+   
     // --- Enum para Status ---
     public enum StatusNegociacao {
         PENDENTE,
@@ -71,4 +72,5 @@ public class Negociacao {
 
     public LocalDateTime getDataFinalizacao() { return dataFinalizacao; }
     public void setDataFinalizacao(LocalDateTime dataFinalizacao) { this.dataFinalizacao = dataFinalizacao; }
+    
 }

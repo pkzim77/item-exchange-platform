@@ -6,6 +6,7 @@ import { Avatar, AvatarFallback } from "../componentes/avatar";
 import { SearchBar } from "../componentes/searchBar";
 import { Navbar } from "../componentes/navBar";
 import { useNavigate } from 'react-router-dom';
+import {CheckCircle2 } from 'lucide-react';
 
 export default function HomePage() {
   const [itens, setItens] = useState([])
@@ -82,12 +83,18 @@ export default function HomePage() {
                 onClick={() => navigate(`/advertisementDetails/${element.id}`)}
 
               >
-                <CardHeader>
+                <CardHeader className="position-relative">
                   <img
                     src={element.imagens[0]}
                     alt={element.nome}
                     className="card-img"
                   />
+                  {element.categoria === 'Concluido' && (
+                    <div className="badge-concluido">
+                      <CheckCircle2 className="w-4 h-4" />
+                      <span>Concluido</span>
+                    </div>
+                  )}
                 </CardHeader>
                 <CardContent>
                   <div>

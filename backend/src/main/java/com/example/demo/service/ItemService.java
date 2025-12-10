@@ -39,9 +39,9 @@ public class ItemService {
         return itemRepository.save(item);
     }
 
-    // Método de Listagem Geral (GET) - Excluindo itens deletados
+    // Método de Listagem Geral (GET)
     public Page<Item> findAll(Pageable pageable) {
-        return itemRepository.findByCategoriaNotIgnoreCase("Deletado", pageable);
+        return itemRepository.findAll(pageable);
     }
 
     // Método de Busca por ID (GET /id)
@@ -50,8 +50,6 @@ public class ItemService {
     }
 
     public void deletarItem(Long id) {
-        System.out.println("🔍 [DELETE] Tentando deletar item ID: " + id);
-
         Item item = itemRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND,
@@ -64,13 +62,13 @@ public class ItemService {
         if (!item.getProprietario().getEmail().equals(emailUsuarioLogado)) {
             throw new ResponseStatusException(
                     HttpStatus.FORBIDDEN,
-                    "Você não tem permissão para deletar este item.");
+                    "Você não tem permissão para confirmar a negociar e marcar este item como concluido.");
         }
 
-        System.out.println("🗑️ Marcando item como Deletado...");
-        item.setCategoria("Deletado");
+        System.out.println("🗑️ Marcando item como Concluido...");
+        item.setCategoria("Concluido");
         itemRepository.save(item);
-        System.out.println("✅ Item marcado como deletado!");
+        System.out.println("✅ Item marcado como concluido!");
     }
 
     public Item atualizarItem(Long id, Item itemAtualizado) {

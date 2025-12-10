@@ -163,7 +163,7 @@
 }
 
 .margin0 {
-    margin: 0 !important;
+    margin: 0;
 }
 
 .star-text-yellow-500 {
@@ -231,6 +231,53 @@
 }
 .font-weight-inherit{
     font-weight: inherit;
+}
+
+.p-1 {
+  padding: 0.25rem;
+}
+
+.bg-transparent{
+    background-color: transparent;
+}
+
+.dropdown-menu {
+    position: absolute;       /* flutua em relação ao container */
+    right: 20%;                 /* alinha à direita do botão */
+    top: 0%;                /* posiciona logo abaixo do botão */
+    margin-top: 0.5rem;       /* espaçamento */
+    width: 8rem;
+    background-color: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.50rem;
+    z-index: 50;
+}
+
+.dropdown-menu2 {
+    position: absolute;       /* flutua em relação ao container */
+    right: 0%;                 /* alinha à direita do botão */
+    bottom: 0%;               /* posiciona logo abaixo do botão */
+    margin-top: 0.5rem;       /* espaçamento */
+    width: 16rem;
+    background-color: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.50rem;
+    z-index: 50;
+}
+
+.dropdown {
+    position: relative; /* referência para o dropdown absoluto */
+    display: inline-block; 
+}
+
+.dropdown-item {
+    display: block;
+    width: 100%;
+    padding: 0.25rem;
+    text-align: center;
+    background: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
 }
 
 

@@ -4,6 +4,7 @@ import RegisterScreen from '../pages/registerScreen';
 import CreateAdvertisementScreen from '../pages/createAdvertisementScreen'
 import AdvertisementDetailsScreen from '../pages/advertisementDetailsScreen';
 import ReviewScreen from '../pages/reviewScreen';
+import NegotiationsScreen from '../pages/negotiationsScreen';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ export default function AppRoutes() {
         <Route path="/createAdvertisement" element={<CreateAdvertisementScreen />} />
         <Route path="/advertisementDetails/:id" element={<AdvertisementDetailsScreen />} />
         <Route path="/reviewScreen/:id" element={<ReviewScreen />} />
+        <Route path="/negotiations" element={<NegotiationsScreen />} />
       </Routes>
     </BrowserRouter>
   );

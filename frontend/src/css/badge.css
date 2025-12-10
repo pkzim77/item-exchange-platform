@@ -86,28 +86,3 @@ a.badge-outline:hover {
   background-color: rgb(243, 244, 246); /* fundo cinza claro */
   color: rgb(17, 24, 39);
 }
-
-/* Modo escuro (dark mode) */
-@media (prefers-color-scheme: dark) {
-  .badge[aria-invalid="true"] {
-    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.4);
-  }
-  
-  .badge-destructive {
-    background-color: rgba(239, 68, 68, 0.6);
-  }
-  
-  .badge-destructive:focus-visible {
-    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.4);
-  }
-  
-  .badge-outline {
-    border-color: rgb(75, 85, 99);
-    color: rgb(243, 244, 246);
-  }
-  
-  a.badge-outline:hover {
-    background-color: rgb(55, 65, 81);
-    color: rgb(243, 244, 246);
-  }
-}

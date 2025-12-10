@@ -11,6 +11,7 @@ import { Avatar, AvatarFallback } from "../componentes/avatar";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '../componentes/carousel';
 import { Button } from '../componentes/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '../componentes/dialog';
+import Swal from 'sweetalert2';
 
 export default function AdvertisementDetailsScreen() {
 
@@ -32,6 +33,45 @@ export default function AdvertisementDetailsScreen() {
     const [reportReason, setReportReason] = useState('');
     const [showReportDialog, setShowReportDialog] = useState(false);
     const [showCompleteDialog, setShowCompleteDialog] = useState(false);
+
+    async function confirmUserNegotiation() {
+        try {
+            const token = localStorage.getItem("token");
+            const response = await axios.post(`http://localhost:8080/api/negociacoes/${id}`,
+                {},
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            Swal.fire({
+                title: 'Troca pendente!',
+                text: 'Parabéns, a negociação do item foi marcada como Pendente, agora basta esperar a confirmação do anunciante. Você já pode avaliar o usuário.',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            });
+        } catch (error) {
+            // error.response.data pode ser objeto ou string
+            const msg = error.response?.data?.message || error.response?.data || 'Erro desconhecido';
+
+            if (typeof msg === 'string') {
+                if (msg.includes('Você já iniciou uma negociação para este item')) {
+                    Swal.fire({
+                        title: 'Negociação já pendente',
+                        text: 'Você já marcou este item para negociação. Aguarde a confirmação do anunciante.',
+                        icon: 'warning',
+                        confirmButtonText: 'Ok'
+                    });
+                } else if (msg.includes('Este item já foi trocado e não está mais disponível para negociação.')) {
+                    return Swal.fire({
+                        title: 'O produto já foi trocado!',
+                        text: 'Este item já foi trocado e não está mais disponível para negociação.',
+                        icon: 'warning',
+                        confirmButtonText: 'Ok'
+                    });
+                }
+            } 
+        }
+
+
+    }
 
     useEffect(() => {
         async function getItem() {
@@ -147,7 +187,7 @@ export default function AdvertisementDetailsScreen() {
                                             <Button variant="outline" onClick={() => setShowCompleteDialog(false)}>
                                                 Cancelar
                                             </Button>
-                                            <Button>Confirmar</Button>
+                                            <Button onClick={confirmUserNegotiation}>Confirmar</Button>
                                         </DialogFooter>
                                     </DialogContent>
                                 </Dialog>

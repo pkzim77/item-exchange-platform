@@ -19,7 +19,7 @@ function Navbar() {
 
         {/* Links de navegação central */}
         <div className="navbar-links-center">
-          <a href="#" className="nav-link">Negociações</a>
+          <Link className='nav-link' to="/negotiations">Negociações</Link>
           <Link className='nav-link' to="/createAdvertisement">Criar um anuncio</Link>
           <a href="#" className="nav-link">Chat</a>
         </div>

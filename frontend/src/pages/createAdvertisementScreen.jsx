@@ -143,8 +143,6 @@ export default function CreateAdvertisementScreen() {
       }
     });
 
-    await axios.post()
-
     Swal.fire({
                     title: 'Anuncio Criado!',
                     text: 'Você criou o anuncio com sucesso.',

@@ -2,6 +2,7 @@ import React from 'react';
 import { Navbar2 } from '../componentes/navBar2';
 import '../css/negotiationsScreen.css'
 
+import { useNavigate } from 'react-router-dom';
 import { Button } from '../componentes/button'
 import { Card, CardContent, CardHeader, CardTitle } from '../componentes/card';
 import { Badge } from '../componentes/badge';
@@ -11,10 +12,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '../componentes/tabs';
 import axios from 'axios';
 import { useState, useEffect } from "react";
 import Swal from 'sweetalert2';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '../componentes/dialog';
 
 export default function NegotiationsScreen() {
 
+    const navigate = useNavigate();
+
     const user = JSON.parse(localStorage.getItem("user"));
+
+    const [showReportDialog, setShowReportDialog] = useState(false);
+    const [showCompleteDialog, setShowCompleteDialog] = useState(false);
 
     const [response, setResponse] = useState([])
     const mockNegotiations = {
@@ -93,16 +100,27 @@ export default function NegotiationsScreen() {
 
     }, []);
 
-    async function confirmNegotiation(negotiationId) {
+    async function confirmNegotiation(negotiationId, itemId) {
         try {
-            console.log(negotiationId)
+            console.log(itemId)
             const token = localStorage.getItem("token");
             const response = await axios.post(`http://localhost:8080/api/negociacoes/${negotiationId}/confirmar`, {}, {
                 headers: { Authorization: `Bearer ${token}` }
             })
 
-            console.log(response)
-
+            const req2 = await axios.delete(`http://localhost:8080/api/itens/${itemId}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            })
+            Swal.fire({
+                title: 'Sucesso',
+                text: 'Negociação finalizada!',
+                icon: 'success',
+                confirmButtonText: 'Ok'
+            }).then((result) => {
+                if (result.isConfirmed) { 
+                    navigate(0); 
+                }
+            })
         } catch (error) {
             console.log(error)
             const msg = error.response?.data?.message || error.response?.data || 'Erro desconhecido';
@@ -122,7 +140,7 @@ export default function NegotiationsScreen() {
 
     }
 
-    async function cancelNegotiation(negotiationId) {
+    async function cancelNegotiation(negotiationId, itemId) {
         try {
             const token = localStorage.getItem("token");
             const req = await axios.patch(`http://localhost:8080/api/negociacoes/${negotiationId}`, {
@@ -130,7 +148,8 @@ export default function NegotiationsScreen() {
             }, {
                 headers: { Authorization: `Bearer ${token}` }
             })
-        }catch (error) {
+
+        } catch (error) {
             console.log(error)
         }
 
@@ -188,9 +207,31 @@ export default function NegotiationsScreen() {
                                     </Button>
                                 </div>
                                 <div>
-                                    <Button size="sm" onClick={() => confirmNegotiation(negotiation.id)}>
+                                    <Button size="sm" onClick={() => confirmNegotiation(negotiation.id, negotiation.item.id)}>
                                         Confirmar Troca
                                     </Button>
+                                    <Dialog open={showCompleteDialog} onOpenChange={setShowCompleteDialog}>
+                                        <DialogTrigger asChild>
+                                            <Button variant="outline" className="flex-1">
+                                                <CheckCircle2 className="h-4 w-4 mr-2" />
+                                                Confirmar troca
+                                            </Button>
+                                        </DialogTrigger>
+                                        <DialogContent>
+                                            <DialogHeader>
+                                                <DialogTitle className='margin0'>Confirmar Troca</DialogTitle>
+                                                <DialogDescription className='margin0 mb-2'>
+                                                    Você tem certeza que a troca foi concluída? O anúncio será removido após a confirmação de ambas as partes ou se o anunciante confirmar a troca.
+                                                </DialogDescription>
+                                            </DialogHeader>
+                                            <DialogFooter>
+                                                <Button variant="outline" onClick={() => setShowCompleteDialog(false)}>
+                                                    Cancelar
+                                                </Button>
+                                                <Button onClick={() => confirmNegotiation(negotiation.id, negotiation.item.id)}>Confirmar</Button>
+                                            </DialogFooter>
+                                        </DialogContent>
+                                    </Dialog>
                                 </div>
                             </div>
                         )}

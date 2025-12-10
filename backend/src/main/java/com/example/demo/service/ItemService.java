@@ -18,92 +18,97 @@ import org.springframework.data.domain.Pageable;
 
 @Service
 public class ItemService {
-	@Autowired
+    @Autowired
     private ItemRepository itemRepository;
-	
-	@Autowired
+
+    @Autowired
     private UsuarioRepository usuarioRepository;
-	
-	// Método de Criação (POST)
+
+    // Método de Criação (POST)
     public Item save(Item item) {
         // 💡 CORREÇÃO 1: Usar getProprietario() para acessar o ID do dono
         if (item.getProprietario() == null || item.getProprietario().getId() == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ID do usuário é obrigatório para criar um item.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "ID do usuário é obrigatório para criar um item.");
         }
         Usuario usuarioCompleto = usuarioRepository.findById(item.getProprietario().getId())
                 .orElseThrow(() -> new ResponseStatusException(
-                                HttpStatus.NOT_FOUND,
-                                "Usuário com ID " + item.getProprietario().getId() + " não encontrado."));
-        item.setProprietario(usuarioCompleto); 
+                        HttpStatus.NOT_FOUND,
+                        "Usuário com ID " + item.getProprietario().getId() + " não encontrado."));
+        item.setProprietario(usuarioCompleto);
         return itemRepository.save(item);
     }
 
-    // Método de Listagem Geral (GET)
+    // Método de Listagem Geral (GET) - Excluindo itens deletados
     public Page<Item> findAll(Pageable pageable) {
-        return itemRepository.findAll(pageable);
+        return itemRepository.findByCategoriaNotIgnoreCase("Deletado", pageable);
     }
-    
+
     // Método de Busca por ID (GET /id)
     public Optional<Item> findById(Long id) {
         return itemRepository.findById(id);
     }
 
-    // MÉTODO DE EXCLUSÃO (DELETE)
     public void deletarItem(Long id) {
-    	if (!itemRepository.existsById(id)) {
+        System.out.println("🔍 [DELETE] Tentando deletar item ID: " + id);
+
+        Item item = itemRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Item não encontrado para o ID: " + id));
+
+        String emailUsuarioLogado = SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getName();
+
+        if (!item.getProprietario().getEmail().equals(emailUsuarioLogado)) {
             throw new ResponseStatusException(
-                HttpStatus.NOT_FOUND,
-                "Item não encontrado para o ID: " + id
-            );
-        }
-    	Item item = itemRepository.findById(id)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Item não encontrado"));
-
-        UsuarioDetails usuarioLogado = (UsuarioDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Long usuarioLogadoId = usuarioLogado.getUsuario().getId();
-
-        if (!item.getProprietario().getId().equals(usuarioLogadoId)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Você não tem permissão para deletar este item.");
+                    HttpStatus.FORBIDDEN,
+                    "Você não tem permissão para deletar este item.");
         }
 
-        itemRepository.deleteById(id);
+        System.out.println("🗑️ Marcando item como Deletado...");
+        item.setCategoria("Deletado");
+        itemRepository.save(item);
+        System.out.println("✅ Item marcado como deletado!");
     }
-    
 
     public Item atualizarItem(Long id, Item itemAtualizado) {
         return itemRepository.findById(id).map(itemExistente -> {
-        	 UsuarioDetails usuarioLogado = (UsuarioDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-             Long usuarioLogadoId = usuarioLogado.getUsuario().getId(); 
-             Long novoUsuarioId = itemAtualizado.getProprietario().getId();
+            UsuarioDetails usuarioLogado = (UsuarioDetails) SecurityContextHolder.getContext().getAuthentication()
+                    .getPrincipal();
+            Long usuarioLogadoId = usuarioLogado.getUsuario().getId();
+            Long novoUsuarioId = itemAtualizado.getProprietario().getId();
 
             if (!itemExistente.getProprietario().getId().equals(usuarioLogadoId)) {
-              throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Você não tem permissão para editar este item.");
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                        "Você não tem permissão para editar este item.");
             }
-            
+
             // Lógica para mudar o usuário (se for o caso)
             if (novoUsuarioId != null && !novoUsuarioId.equals(itemExistente.getProprietario().getId())) {
-                 Usuario usuarioCompleto = usuarioRepository.findById(novoUsuarioId)
-                 		
-                 		.orElseThrow(() -> new ResponseStatusException(
+                Usuario usuarioCompleto = usuarioRepository.findById(novoUsuarioId)
+
+                        .orElseThrow(() -> new ResponseStatusException(
                                 HttpStatus.NOT_FOUND,
                                 "Novo Usuário com ID " + novoUsuarioId + " não encontrado."));
-                 itemExistente.setProprietario(usuarioCompleto);
+                itemExistente.setProprietario(usuarioCompleto);
             }
-            
+
             // Atualização dos campos do item
             itemExistente.setNome(itemAtualizado.getNome());
             itemExistente.setDescricao(itemAtualizado.getDescricao());
             itemExistente.setCategoria(itemAtualizado.getCategoria());
             itemExistente.setImagens(itemAtualizado.getImagens());
             itemExistente.setEndereco(itemAtualizado.getEndereco());
-            
+
             return itemRepository.save(itemExistente);
-            
-            } ).orElseThrow(() -> new ResponseStatusException(
-            HttpStatus.NOT_FOUND,
-            "Item não encontrado para o ID: " + id));
+
+        }).orElseThrow(() -> new ResponseStatusException(
+                HttpStatus.NOT_FOUND,
+                "Item não encontrado para o ID: " + id));
     }
-    
+
     public List<Item> buscarPorCategoria(String categoria) {
         return itemRepository.findByCategoriaContainingIgnoreCase(categoria);
     }

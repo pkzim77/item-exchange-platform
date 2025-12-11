@@ -1,4 +1,3 @@
-
 package com.example.demo.controller;
 
 import com.example.demo.dto.AtualizarStatusRequest;
@@ -34,11 +33,12 @@ public class NegociacaoController {
 		return usuario.getId();
 	}
 
-	@PostMapping("/{itemId}")
-	public ResponseEntity<Negociacao> iniciarNegociacao(@PathVariable Long itemId) {
-		Long compradorId = getAuthenticatedUserId();
-		Negociacao novaNegociacao = negociacaoService.iniciarNegociacao(itemId, compradorId);
-		return new ResponseEntity<>(novaNegociacao, HttpStatus.CREATED);
+	// Endpoints específicos com prefixos claros (colocar ANTES dos genéricos)
+	@GetMapping("/historico")
+	public ResponseEntity<List<Negociacao>> getHistoricoNegociacoes() {
+		Long userId = getAuthenticatedUserId();
+		List<Negociacao> historico = negociacaoService.getHistoricoNegociacoes(userId);
+		return ResponseEntity.ok(historico);
 	}
 
 	@PostMapping("/{negociacaoId}/confirmar")
@@ -46,6 +46,20 @@ public class NegociacaoController {
 		Long userId = getAuthenticatedUserId();
 		Negociacao negociacaoAtualizada = negociacaoService.confirmarTroca(negociacaoId, userId);
 		return ResponseEntity.ok(negociacaoAtualizada);
+	}
+
+	@PostMapping("/item/{itemId}/sem-comprador")
+	public ResponseEntity<Negociacao> iniciarNegociacaoSemComprador(@PathVariable Long itemId) {
+		Negociacao novaNegociacao = negociacaoService.iniciarNegociacao(itemId, null);
+		return new ResponseEntity<>(novaNegociacao, HttpStatus.CREATED);
+	}
+
+	// Endpoints genéricos por último
+	@PostMapping("/item/{itemId}")
+	public ResponseEntity<Negociacao> iniciarNegociacao(@PathVariable Long itemId) {
+		Long compradorId = getAuthenticatedUserId();
+		Negociacao novaNegociacao = negociacaoService.iniciarNegociacao(itemId, compradorId);
+		return new ResponseEntity<>(novaNegociacao, HttpStatus.CREATED);
 	}
 
 	@PatchMapping("/{negociacaoId}")
@@ -58,13 +72,4 @@ public class NegociacaoController {
 				negociacaoId, request.getStatus(), userId);
 		return ResponseEntity.ok(negociacaoAtualizada);
 	}
-
-	@GetMapping("/historico")
-	public ResponseEntity<List<Negociacao>> getHistoricoNegociacoes() {
-		Long userId = getAuthenticatedUserId();
-		List<Negociacao> historico = negociacaoService.getHistoricoNegociacoes(userId);
-		return ResponseEntity.ok(historico);
-	}
 }
-
-

@@ -90,4 +90,11 @@ public class ItemController {
         return ResponseEntity.noContent().build();
     }
 
+    // Novo endpoint (hard delete - deleta permanentemente do banco)
+    @DeleteMapping("/{id}/permanente")
+    public ResponseEntity<Void> deletarItemPermanente(@PathVariable Long id) {
+        itemService.deletarItemPermanente(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }

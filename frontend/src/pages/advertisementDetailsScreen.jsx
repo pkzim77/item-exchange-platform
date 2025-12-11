@@ -37,7 +37,7 @@ export default function AdvertisementDetailsScreen() {
     async function confirmUserNegotiation() {
         try {
             const token = localStorage.getItem("token");
-            const response = await axios.post(`http://localhost:8080/api/negociacoes/${id}`,
+            const response = await axios.post(`http://localhost:8080/api/negociacoes/item/${id}`,
                 {},
                 { headers: { Authorization: `Bearer ${token}` } }
             );

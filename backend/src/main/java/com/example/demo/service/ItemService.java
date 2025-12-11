@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.example.demo.config.UsuarioDetails;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.Item;
 import com.example.demo.model.Usuario;
 import com.example.demo.repository.ItemRepository;
@@ -71,11 +72,26 @@ public class ItemService {
         System.out.println("✅ Item marcado como concluido!");
     }
 
+    public void deletarItemPermanente(Long id) {
+        System.out.println("=== DELETANDO ITEM PERMANENTEMENTE ===");
+        System.out.println("ItemId: " + id);
+
+        Item item = itemRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Item não encontrado"));
+
+        System.out.println("Item encontrado: " + item.getNome());
+
+        // Deleta permanentemente do banco de dados
+        itemRepository.delete(item);
+
+        System.out.println("Item deletado com sucesso!");
+        System.out.println("=== FIM DELETAR ITEM ===");
+    }
+
     public Item atualizarItem(Long id, Item itemAtualizado) {
         return itemRepository.findById(id).map(itemExistente -> {
-            UsuarioDetails usuarioLogado = (UsuarioDetails) SecurityContextHolder.getContext().getAuthentication()
-                    .getPrincipal();
-            Long usuarioLogadoId = usuarioLogado.getUsuario().getId();
+            Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            Long usuarioLogadoId = usuarioLogado.getId();
             Long novoUsuarioId = itemAtualizado.getProprietario().getId();
 
             if (!itemExistente.getProprietario().getId().equals(usuarioLogadoId)) {

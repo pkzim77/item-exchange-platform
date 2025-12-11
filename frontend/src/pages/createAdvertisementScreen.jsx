@@ -134,14 +134,13 @@ export default function CreateAdvertisementScreen() {
       proprietario: {"id": user.id}
       
     };
-
-    console.log("JSON enviado:", body);
-
-    await axios.post("http://localhost:8080/api/itens", body, {
+    const res = await axios.post("http://localhost:8080/api/itens", body, {
       headers: {
         "Authorization": `Bearer ${token}`,
       }
     });
+
+    await axios.post(`http://localhost:8080/api/negociacoes/item/${res.data.id}/sem-comprador`)
 
     Swal.fire({
                     title: 'Anuncio Criado!',

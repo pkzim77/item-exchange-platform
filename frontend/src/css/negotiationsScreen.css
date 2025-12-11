@@ -231,6 +231,26 @@
     display: none;
   }
 
+  .max-w-lg{
+    max-width: 32rem;
+  }
+
+  .space-y-3 > * + * {
+  margin-top: 0.75rem; 
+}
+
+.p-2{
+  padding: 0.5rem;
+}
+
+.preview-imagem-item {
+  width: 5rem;    
+  height: 5rem;     
+  border-radius: 0.375rem; 
+  object-fit: cover; 
+  border: 1px solid #e5e7eb; 
+}
+
 @media (max-width: 480px) {
   .flex-col-md {
     flex-direction: column;

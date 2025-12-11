@@ -49,6 +49,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST, "/api/usuarios").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/negociacoes/item/*/sem-comprador").permitAll()
 
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // PREVENT CORS 403
                         .requestMatchers(HttpMethod.DELETE, "/api/itens/**").authenticated()

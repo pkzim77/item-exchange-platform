@@ -106,10 +106,6 @@ export default function HomePage() {
                       <AvatarFallback>{element.proprietario.nome[0]}</AvatarFallback>
                     </Avatar>
                     <span className="text-sm">{element.proprietario.nome}</span>
-                    <span className="text-sm rating">{element.proprietario.notaAvaliacao
-                      ? `★ ${element.proprietario.notaAvaliacao.toFixed(1)}`
-                      : "Sem avaliação"}
-                    </span>
                   </div>
                   <p className="text-sm text-gray-500">{element.endereco}</p>
                 </CardContent>

@@ -17,48 +17,6 @@ export default function ReviewScreen() {
 
     const user = JSON.parse(localStorage.getItem("user"));
 
-    const mockUserProfile = {
-        id: 1,
-        name: 'João Silva',
-        phone: '(11) 98765-4321',
-        location: 'São Paulo, SP',
-        rating: 4.8,
-        totalRatings: 24,
-        memberSince: 'Janeiro 2024',
-        totalNegotiations: 32,
-        successRate: 94,
-        ratingBreakdown: {
-            5: 18,
-            4: 4,
-            3: 1,
-            2: 1,
-            1: 0
-        },
-        recentReviews: [
-            {
-                id: 1,
-                rating: 5,
-                comment: 'Excelente negociação! Produto exatamente como descrito.',
-                reviewer: 'Maria Santos',
-                date: '15/10/2025'
-            },
-            {
-                id: 2,
-                rating: 5,
-                comment: 'Pessoa muito confiável e pontual. Recomendo!',
-                reviewer: 'Carlos Oliveira',
-                date: '10/10/2025'
-            },
-            {
-                id: 3,
-                rating: 4,
-                comment: 'Boa comunicação, produto em bom estado.',
-                reviewer: 'Ana Costa',
-                date: '05/10/2025'
-            }
-        ],
-    };
-
     const { id } = useParams();
     const [data, setData] = useState(null);
     const [data2, setData2] = useState(null);
@@ -68,11 +26,48 @@ export default function ReviewScreen() {
     const [openModalId, setOpenModalId] = useState(null);
     const [editingId, setEditingId] = useState(null);
     const [editText, setEditText] = useState("");
+    const [totalNegotiacoes, setTotalNegotiacoes] = useState(0);
     let idNegotiation
 
     const [newComment, setNewComment] = useState('');
 
-    const [comments, setComments] = useState([]);
+    // Função corrigida para somar negociações do proprietário do item
+    const sumNegotiation = (negociacoes, proprietarioId) => {
+        console.log("=== INICIANDO sumNegotiation ===");
+        console.log("Negociações recebidas:", negociacoes);
+        console.log("ID do proprietário:", proprietarioId);
+        
+        if (!negociacoes || !Array.isArray(negociacoes)) {
+            console.log("❌ Negociações inválidas ou não é array");
+            return 0;
+        }
+        
+        // Conta quantas negociações FINALIZADAS o proprietário do item tem
+        const negociacoesFiltradas = negociacoes.filter(
+            neg => {
+                const ehProprietario = neg.item.proprietario.id === proprietarioId;
+                const estaFinalizada = neg.status === 'FINALIZADA';
+                
+                console.log(`Negociação ID ${neg.id}:`, {
+                    proprietarioNegociacao: neg.item.proprietario.id,
+                    proprietarioBuscado: proprietarioId,
+                    ehProprietario,
+                    status: neg.status,
+                    estaFinalizada,
+                    passouNoFiltro: ehProprietario && estaFinalizada
+                });
+                
+                return ehProprietario && estaFinalizada;
+            }
+        );
+        
+        const total = negociacoesFiltradas.length;
+        
+        console.log("✅ Total de negociações finalizadas:", total);
+        console.log("=== FIM sumNegotiation ===");
+        
+        return total;
+    }
 
     const handleAddComment = async () => {
         idNegotiation = getNegotiation(data4)
@@ -114,7 +109,7 @@ export default function ReviewScreen() {
             }
         }
     };
-    // Funções de ação
+
     const handleEditSubmit = async () => {
         if (!editText.trim()) return;
 
@@ -137,14 +132,12 @@ export default function ReviewScreen() {
                 }
             );
 
-            // Atualiza no front sem reler API
             setData2(prev =>
                 prev.map(r =>
                     r.id === editingId ? { ...r, comentario: editText, nota: 5 } : r
                 )
             );
 
-            // Fecha modal
             setEditingId(null);
             setEditText("");
 
@@ -155,6 +148,7 @@ export default function ReviewScreen() {
             Swal.fire("Erro", error.response?.data?.message || "Erro ao atualizar.", "error");
         }
     };
+
     const handleDelete = (reviewId) => {
         Swal.fire({
             title: "Tem certeza?",
@@ -184,11 +178,6 @@ export default function ReviewScreen() {
         });
     };
 
-    function getPercentage(count) {
-        const total = Object.values(mockUserProfile.ratingBreakdown).reduce((acc, curr) => acc + curr, 0);
-        if (total === 0) return 0;
-        return (count / total) * 100;
-    }
     function getNegotiation(negociacoes) {
         try {
             const negociacao = negociacoes.find(
@@ -206,6 +195,7 @@ export default function ReviewScreen() {
             return null;
         }
     }
+
     useEffect(() => {
         async function getItem() {
             try {
@@ -235,16 +225,20 @@ export default function ReviewScreen() {
                         headers: { Authorization: `Bearer ${token}` },
                     })
                 ]);
-                setData4(fourResponse.data)
-                console.log(fourResponse.data);
 
-                console.log(getNegotiation(fourResponse.data));
+                setData4(fourResponse.data);
+                console.log("Negociações:", fourResponse.data);
 
-                console.log(getNegotiation(fourResponse.data));
+                // Calcula o total de negociações finalizadas do proprietário
+                const total = sumNegotiation(fourResponse.data, ownerId);
+                setTotalNegotiacoes(total);
+                console.log("Total de negociações finalizadas:", total);
+
                 setData2(secondResponse.data);
-                console.log(secondResponse.data)
+                console.log("Avaliações:", secondResponse.data)
+                
                 setData3(thirdResponse.data);
-                console.log(thirdResponse.data)
+                console.log("Dados do usuário:", thirdResponse.data)
             } catch (error) {
                 console.error("Erro ao buscar dados:", error);
             } finally {
@@ -272,20 +266,10 @@ export default function ReviewScreen() {
 
                                 <div className=" flex-1 responsive-text-align flex-column">
                                     <h2 className="mb-2 font-size-inherit font-weight-inherit">{data.proprietario.nome}</h2>
-
-                                    <div className="flex items-center justify-center md:justify-start gap-2 mb-3">
-                                        <div className="flex items-center gap-1">
-                                            <Star className="h-5 w-5 star-text-yellow-500" />
-                                            <span className="text-xl">{data.proprietario.notaAvaliacao}.0</span>
-                                        </div>
-                                        <span className="text-gray-600">(0 avaliações)</span>
-                                    </div>
-
                                     <div className="flex flex-col-md-row gap-2 text-sm text-gray-600 mb-4">
                                         <div className="flex items-center gap-1">
                                             <MapPin className="h-4 w-4" />
                                             {data3.logradouro},
-
                                         </div>
                                         {data3.cidade}
                                         <div className="flex items-center gap-1">
@@ -296,16 +280,16 @@ export default function ReviewScreen() {
 
                                     <div className="grid grid-cols-3 gap-4 mb-4">
                                         <div className="text-center p-3 bg-light-green rounded-lg">
-                                            <p className="text-2xl margin0" >0 </p>
-                                            <p className="text-sm text-gray-600 margin0">Negociações</p>
+                                            <p className="text-2xl margin0">{totalNegotiacoes}</p>
+                                            <p className="text-sm text-gray-600 margin0">Trocas Concluídas</p>
                                         </div>
                                         <div className="text-center p-3 bg-light-green rounded-lg">
-                                            <p className="text-2xl margin0">0%</p>
-                                            <p className="text-sm text-gray-600 margin0">Taxa de Sucesso</p>
+                                            <p className="text-2xl margin0">{data2.length}</p>
+                                            <p className="text-sm text-gray-600 margin0">Avaliações</p>
                                         </div>
                                         <div className="text-center p-3 bg-light-green rounded-lg">
                                             <p className="text-sm text-gray-600 margin0">Membro desde</p>
-                                            <p className="text-sm margin0">Janeiro 2024</p>
+                                            <p className="text-sm margin0">2025</p>
                                         </div>
                                     </div>
 
@@ -314,31 +298,6 @@ export default function ReviewScreen() {
                                         Enviar Mensagem
                                     </Button>
                                 </div>
-                            </div>
-                        </CardContent>
-                    </Card>
-
-                    <Card className="p-6">
-                        <CardHeader >
-                            <CardTitle>Distribuição de Avaliações</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="space-y-3">
-                                {[5, 4, 3, 2, 1].map((stars) => {
-                                    const count = mockUserProfile.ratingBreakdown[stars];
-                                    const percentage = getPercentage(count);
-
-                                    return (
-                                        <div key={stars} className="flex items-center gap-3">
-                                            <div className="flex items-center gap-1 w-12">
-                                                <span className="text-sm">{stars}</span>
-                                                <Star className="star-text-yellow-500" />
-                                            </div>
-                                            <Progress value={percentage} className="flex-1" />
-                                            <span className="text-sm text-gray-600 w-8">{count}</span>
-                                        </div>
-                                    );
-                                })}
                             </div>
                         </CardContent>
                     </Card>
@@ -400,9 +359,6 @@ export default function ReviewScreen() {
                                                     <span>{review.avaliadorNome}</span>
                                                 </div>
                                                 <div className="dropdown">
-                                                    {[...Array(review.nota)].map((_, i) => (
-                                                        <Star key={i} className="h-4 w-4 star-text-yellow-500" />
-                                                    ))}
                                                     <button
                                                         className="p-1 bg-transparent hover:bg-gray-100 rounded transition-colors"
                                                         onClick={() => setOpenModalId(openModalId === review.id ? null : review.id)}
@@ -412,7 +368,6 @@ export default function ReviewScreen() {
                                                     {openModalId === review.id && (
                                                         <div className="dropdown-menu">
                                                             {editingId !== review.id ? (
-                                                                // Menu dropdown normal
                                                                 <>
                                                                     <button
                                                                         className="dropdown-item"
@@ -433,7 +388,6 @@ export default function ReviewScreen() {
                                                                     </button>
                                                                 </>
                                                             ) : (
-                                                                // Modal de edição
                                                                 <div className="dropdown-menu2">
                                                                     <div className="bg-white p-6 rounded-lg w-96 shadow">
                                                                         <h2 className="text-xl mb-3">Editar Comentário</h2>
@@ -451,7 +405,7 @@ export default function ReviewScreen() {
                                                                                 onClick={() => {
                                                                                     setEditingId(null);
                                                                                     setEditText("");
-                                                                                    setOpenModalId(null); // Fecha o dropdown também
+                                                                                    setOpenModalId(null);
                                                                                 }}
                                                                             >
                                                                                 Cancelar
@@ -483,8 +437,5 @@ export default function ReviewScreen() {
                 </div>
             </main>
         </div>
-
-
-
     )
 }

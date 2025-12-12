@@ -142,23 +142,7 @@ export default function AdvertisementDetailsScreen() {
                                             </Avatar>
                                             <div>
                                                 <p className='margin0 p-v-1'>{data.proprietario.nome}</p>
-                                                <div className="flex items-center gap-1 text-sm">
-                                                    {[1, 2, 3, 4, 5].map((i) => (
-                                                        <Star
-                                                            key={i}
-                                                            className={i <= data.proprietario.notaAvaliacao ? "star-text-yellow-500" : "star-text-white"}
-                                                            fill={i <= data.proprietario.notaAvaliacao ? "currentColor" : "none"}
-                                                        />
-                                                    ))}
-                                                    <span>{data.proprietario.notaAvaliacao}.0 </span>
-                                                    {/*<span className="text-gray-500">({mockAdDetails.advertiser.totalRatings} avaliações)</span>*/}
-                                                    <span>(0 avaliações)</span>
-                                                </div>
                                             </div>
-                                        </div>
-                                        <div className="flex items-center gap-2 text-sm">
-                                            <Phone className="h-4 w-4" />
-                                            <span>{data.proprietario.telefone}</span>
                                         </div>
                                     </div>
                                 </CardContent>

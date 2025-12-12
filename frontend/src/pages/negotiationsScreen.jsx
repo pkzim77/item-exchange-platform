@@ -36,7 +36,14 @@ export default function NegotiationsScreen() {
         address: "",
     });
 
-    const [imagensBase64, setImagensBase64] = useState([]);
+    const [images, setImages] = useState([]);
+    useEffect(() => {
+        return () => {
+            images.forEach(img => {
+                if (img.preview) URL.revokeObjectURL(img.preview);
+            });
+        };
+    }, [images]);
 
     useEffect(() => {
         async function getNegotiation() {
@@ -58,20 +65,28 @@ export default function NegotiationsScreen() {
 
     }, []);
 
-    const handleImageUpload = async (e) => {
-        const files = Array.from(e.target.files);
-        const base64List = [];
+    const handleEditImageUpload = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
 
-        for (const file of files) {
-            const reader = new FileReader();
-            const base64 = await new Promise((resolve) => {
-                reader.onload = () => resolve(reader.result);
-                reader.readAsDataURL(file);
-            });
-            base64List.push(base64);
+        if (!file.type.startsWith("image/")) {
+            Swal.fire("Arquivo inválido", "Envie apenas imagens.", "warning");
+            return;
         }
 
-        setImagensBase64(base64List);
+        if (file.size > 5 * 1024 * 1024) {
+            Swal.fire("Arquivo grande", "Máximo permitido: 5MB", "warning");
+            return;
+        }
+
+        file.preview = URL.createObjectURL(file);
+        setImages([...images, file]);
+    };
+
+    const removeEditImage = (index) => {
+        const img = images[index];
+        if (img.preview) URL.revokeObjectURL(img.preview);
+        setImages(images.filter((_, i) => i !== index));
     };
 
     async function confirmNegotiation(negotiationId, itemId) {
@@ -176,7 +191,12 @@ export default function NegotiationsScreen() {
                 category: item.categoria || "",
                 address: item.endereco || "",
             });
-            setImagensBase64(item.imagens || []);
+            setImages(
+                (item.imagens || []).map((imgBase64) => ({
+                    preview: imgBase64,
+                    isExisting: true
+                }))
+            );
 
             setShowEditDialog(true);
 
@@ -187,6 +207,21 @@ export default function NegotiationsScreen() {
     }
 
     async function saveItemChanges() {
+        const convertToBase64 = (file) => {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = err => reject(err);
+            });
+        };
+
+        const novasImagensBase64 = await Promise.all(
+            images.map(async (img) => {
+                if (img.isExisting) return img.preview;
+                return await convertToBase64(img);
+            })
+        );
         try {
             const token = localStorage.getItem("token");
 
@@ -194,11 +229,9 @@ export default function NegotiationsScreen() {
                 nome: formData.title,
                 descricao: formData.description,
                 endereco: formData.address,
-                imagens: imagensBase64,
+                imagens: novasImagensBase64,
                 categoria: formData.category,
-                proprietario: {
-                    id: editingItem.proprietario.id
-                }
+                proprietario: { id: editingItem.proprietario.id }
             };
 
 
@@ -462,28 +495,62 @@ export default function NegotiationsScreen() {
                                 </div>
 
                                 <div>
-                                    <label className="text-sm font-medium">Imagens</label>
-                                    <input
-                                        type="file"
-                                        multiple
-                                        accept="image/*"
+                                    <label className="text-sm font-medium">Categoria</label>
+                                    <select
                                         className="w-full border p-2 rounded"
-                                        onChange={handleImageUpload}
-                                    />
+                                        value={formData.category}
+                                        onChange={(e) =>
+                                            setFormData({ ...formData, category: e.target.value })
+                                        }
+                                    >
+                                        <option value='' >Todas</option>
+                                        <option value="Esportes">Esportes</option>
+                                        <option value="Livros">Livros</option>
+                                        <option value="Eletrônicos">Eletrônicos</option>
+                                        <option value="Móveis">Movéis</option>
+                                        <option value="Instrumentos">Instrumentos</option>
+                                        <option value="Roupas">Roupas</option>
+                                    </select>
                                 </div>
 
-                                {imagensBase64.length > 0 && (
-                                    <div className="grid grid-cols-3 gap-2 mt-2">
-                                        {imagensBase64.map((img, index) => (
-                                            <img
-                                                key={index}
-                                                src={img}
-                                                alt={`Preview ${index + 1}`}
-                                                className="preview-imagem-item"
-                                            />
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium">Imagens</label>
+
+                                    <div className="photo-upload-grid">
+                                        {images.map((img, index) => (
+                                            <div key={index} className="relative">
+                                                <img
+                                                    src={img.preview}
+                                                    alt="preview"
+                                                    className="item-preview"
+                                                />
+                                                <Button
+                                                    type="button"
+                                                    variant="destructive"
+                                                    size="icon"
+                                                    className="remove-photo-btn"
+                                                    onClick={() => removeEditImage(index)}
+                                                >
+                                                    <XCircle className="h-4 w-4" />
+                                                </Button>
+                                            </div>
                                         ))}
+
+                                        {images.length < 6 && (
+                                            <label className="upload-area">
+                                                <Clock className="h-8 w-8 text-gray-400 mb-2" />
+                                                <span className="text-sm text-gray-600">Adicionar foto</span>
+                                                <input
+                                                    type="file"
+                                                    accept="image/*"
+                                                    className="hidden"
+                                                    onChange={handleEditImageUpload}
+                                                />
+                                            </label>
+                                        )}
                                     </div>
-                                )}
+                                </div>
+
                             </div>
 
                             <DialogFooter>

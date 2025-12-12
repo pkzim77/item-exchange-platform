@@ -15,12 +15,11 @@ public class Negociacao {
 
     @ManyToOne
     @JoinColumn(name = "item_id", nullable = false)
-    @JsonIgnoreProperties({"proprietario", "descricao", "endereco"})
+    @JsonIgnoreProperties({ "descricao", "endereco" })
     private Item item;
 
     @ManyToOne
-    @JoinColumn(name = "comprador_id", nullable = false)
-    @JsonIgnoreProperties({"senha", "email", "telefone", "itens"})
+    @JoinColumn(name = "comprador_id", nullable = true)
     private Usuario comprador;
 
     @Enumerated(EnumType.STRING)
@@ -44,31 +43,73 @@ public class Negociacao {
         FINALIZADA
     }
 
-    public Negociacao() {}
+    public Negociacao() {
+    }
 
     // --- GETTERS E SETTERS ---
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public Item getItem() { return item; }
-    public void setItem(Item item) { this.item = item; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public Usuario getComprador() { return comprador; }
-    public void setComprador(Usuario comprador) { this.comprador = comprador; }
+    public Item getItem() {
+        return item;
+    }
 
-    public StatusNegociacao getStatus() { return status; }
-    public void setStatus(StatusNegociacao status) { this.status = status; }
+    public void setItem(Item item) {
+        this.item = item;
+    }
 
-    public boolean isCompradorConfirmou() { return compradorConfirmou; }
-    public void setCompradorConfirmou(boolean compradorConfirmou) { this.compradorConfirmou = compradorConfirmou; }
+    public Usuario getComprador() {
+        return comprador;
+    }
 
-    public boolean isProprietarioConfirmou() { return proprietarioConfirmou; }
-    public void setProprietarioConfirmou(boolean proprietarioConfirmou) { this.proprietarioConfirmou = proprietarioConfirmou; }
+    public void setComprador(Usuario comprador) {
+        this.comprador = comprador;
+    }
 
-    public LocalDateTime getDataCriacao() { return dataCriacao; }
-    public void setDataCriacao(LocalDateTime dataCriacao) { this.dataCriacao = dataCriacao; }
+    public StatusNegociacao getStatus() {
+        return status;
+    }
 
-    public LocalDateTime getDataFinalizacao() { return dataFinalizacao; }
-    public void setDataFinalizacao(LocalDateTime dataFinalizacao) { this.dataFinalizacao = dataFinalizacao; }
+    public void setStatus(StatusNegociacao status) {
+        this.status = status;
+    }
+
+    public boolean isCompradorConfirmou() {
+        return compradorConfirmou;
+    }
+
+    public void setCompradorConfirmou(boolean compradorConfirmou) {
+        this.compradorConfirmou = compradorConfirmou;
+    }
+
+    public boolean isProprietarioConfirmou() {
+        return proprietarioConfirmou;
+    }
+
+    public void setProprietarioConfirmou(boolean proprietarioConfirmou) {
+        this.proprietarioConfirmou = proprietarioConfirmou;
+    }
+
+    public LocalDateTime getDataCriacao() {
+        return dataCriacao;
+    }
+
+    public void setDataCriacao(LocalDateTime dataCriacao) {
+        this.dataCriacao = dataCriacao;
+    }
+
+    public LocalDateTime getDataFinalizacao() {
+        return dataFinalizacao;
+    }
+
+    public void setDataFinalizacao(LocalDateTime dataFinalizacao) {
+        this.dataFinalizacao = dataFinalizacao;
+    }
+
 }

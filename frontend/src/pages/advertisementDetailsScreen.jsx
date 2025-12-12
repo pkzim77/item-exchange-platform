@@ -11,6 +11,7 @@ import { Avatar, AvatarFallback } from "../componentes/avatar";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '../componentes/carousel';
 import { Button } from '../componentes/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '../componentes/dialog';
+import Swal from 'sweetalert2';
 
 export default function AdvertisementDetailsScreen() {
 
@@ -32,6 +33,45 @@ export default function AdvertisementDetailsScreen() {
     const [reportReason, setReportReason] = useState('');
     const [showReportDialog, setShowReportDialog] = useState(false);
     const [showCompleteDialog, setShowCompleteDialog] = useState(false);
+
+    async function confirmUserNegotiation() {
+        try {
+            const token = localStorage.getItem("token");
+            const response = await axios.post(`http://localhost:8080/api/negociacoes/item/${id}`,
+                {},
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            Swal.fire({
+                title: 'Troca pendente!',
+                text: 'Parabéns, a negociação do item foi marcada como Pendente, agora basta esperar a confirmação do anunciante. Você já pode avaliar o usuário.',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            });
+        } catch (error) {
+            // error.response.data pode ser objeto ou string
+            const msg = error.response?.data?.message || error.response?.data || 'Erro desconhecido';
+
+            if (typeof msg === 'string') {
+                if (msg.includes('Você já iniciou uma negociação para este item')) {
+                    Swal.fire({
+                        title: 'Negociação já pendente',
+                        text: 'Você já marcou este item para negociação. Aguarde a confirmação do anunciante.',
+                        icon: 'warning',
+                        confirmButtonText: 'Ok'
+                    });
+                } else if (msg.includes('Este item já foi trocado e não está mais disponível para negociação.')) {
+                    return Swal.fire({
+                        title: 'O produto já foi trocado!',
+                        text: 'Este item já foi trocado e não está mais disponível para negociação.',
+                        icon: 'warning',
+                        confirmButtonText: 'Ok'
+                    });
+                }
+            } 
+        }
+
+
+    }
 
     useEffect(() => {
         async function getItem() {
@@ -102,23 +142,7 @@ export default function AdvertisementDetailsScreen() {
                                             </Avatar>
                                             <div>
                                                 <p className='margin0 p-v-1'>{data.proprietario.nome}</p>
-                                                <div className="flex items-center gap-1 text-sm">
-                                                    {[1, 2, 3, 4, 5].map((i) => (
-                                                        <Star
-                                                            key={i}
-                                                            className={i <= data.proprietario.notaAvaliacao ? "star-text-yellow-500" : "star-text-white"}
-                                                            fill={i <= data.proprietario.notaAvaliacao ? "currentColor" : "none"}
-                                                        />
-                                                    ))}
-                                                    <span>{data.proprietario.notaAvaliacao}.0 </span>
-                                                    {/*<span className="text-gray-500">({mockAdDetails.advertiser.totalRatings} avaliações)</span>*/}
-                                                    <span>(0 avaliações)</span>
-                                                </div>
                                             </div>
-                                        </div>
-                                        <div className="flex items-center gap-2 text-sm">
-                                            <Phone className="h-4 w-4" />
-                                            <span>{data.proprietario.telefone}</span>
                                         </div>
                                     </div>
                                 </CardContent>
@@ -147,7 +171,7 @@ export default function AdvertisementDetailsScreen() {
                                             <Button variant="outline" onClick={() => setShowCompleteDialog(false)}>
                                                 Cancelar
                                             </Button>
-                                            <Button>Confirmar</Button>
+                                            <Button onClick={confirmUserNegotiation}>Confirmar</Button>
                                         </DialogFooter>
                                     </DialogContent>
                                 </Dialog>

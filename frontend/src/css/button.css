@@ -22,6 +22,10 @@
   cursor: pointer;
 }
 
+button:focus {
+  outline: none; /* garante que ao focar não apareça */
+}
+
 /* Estados disabled */
 .button:disabled {
   pointer-events: none;

@@ -1,5 +1,5 @@
 import { Navbar2 } from '../componentes/navBar2';
-import '../css/createAdvertisementScreen.css'
+import '../css/createAdvertisementScreen.css';
 import { useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
@@ -8,12 +8,12 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription }
 import { Button } from '../componentes/button';
 import { ArrowLeft, Upload, X } from 'lucide-react';
 import { Input } from "../componentes/input";
-import { TextArea } from '../componentes/textArea'
+import { TextArea } from '../componentes/textArea';
+import Swal from 'sweetalert2';
 
 export default function CreateAdvertisementScreen() {
 
     const user = JSON.parse(localStorage.getItem("user"));
-    console.log(user)
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
         title: '',
@@ -50,13 +50,23 @@ export default function CreateAdvertisementScreen() {
         if (file) {
             // Validar tipo de arquivo
             if (!file.type.startsWith('image/')) {
-                alert('Por favor, selecione apenas arquivos de imagem');
+                Swal.fire({
+                    title: 'Apenas imagens são permitidas',
+                    text: 'Por favor, selecione arquivos nos formatos JPG, PNG ou GIF.',
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                });
                 return;
             }
 
             // Validar tamanho (máximo 5MB)
             if (file.size > 5 * 1024 * 1024) {
-                alert('A imagem deve ter no máximo 5MB');
+                Swal.fire({
+                    title: 'Arquivo muito grande',
+                    text: 'A imagem deve ter no máximo 5MB.',
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                });
                 return;
             }
 
@@ -87,11 +97,21 @@ export default function CreateAdvertisementScreen() {
         e.preventDefault();
 
         if (images.length === 0) {
-            alert("Por favor, adicione pelo menos uma foto do item");
+            Swal.fire({
+                    title: 'Por favor, adicione pelo menos uma imagem do item!',
+                    text: 'Para criar um anuncio é preciso adicionar pelo menos uma imagem.',
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                });
             return;
         }
         if (!formData.category) {
-            alert("Por favor, selecione uma categoria");
+            Swal.fire({
+                    title: 'Por favor, selecione uma categoria!',
+                    text: 'Para criar um anuncio é preciso escolher uma categoria.',
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                });
             return;
         }
 
@@ -114,22 +134,31 @@ export default function CreateAdvertisementScreen() {
       proprietario: {"id": user.id}
       
     };
-
-    console.log("JSON enviado:", body);
-
-    await axios.post("http://localhost:8080/api/itens", body, {
+    const res = await axios.post("http://localhost:8080/api/itens", body, {
       headers: {
         "Authorization": `Bearer ${token}`,
       }
     });
 
-    alert("Anúncio criado com sucesso!");
+    await axios.post(`http://localhost:8080/api/negociacoes/item/${res.data.id}/sem-comprador`)
+
+    Swal.fire({
+                    title: 'Anuncio Criado!',
+                    text: 'Você criou o anuncio com sucesso.',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
     setFormData({ title: '', category: '', description: '', address: '' });
     setImages([]);
     navigate('/');
   } catch (error) {
     console.error(error);
-    alert("Erro ao criar o anúncio.");
+     Swal.fire({
+                    title: 'Erro!',
+                    text: 'Erro ao criar o anuncio.',
+                    icon: 'error',
+                    confirmButtonText: 'Ok'
+                });
   } finally {
     setLoading(false);
   }
